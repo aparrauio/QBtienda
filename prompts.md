@@ -6,17 +6,18 @@ Registro de los prompts utilizados con un asistente de IA (Claude, de Anthropic)
 |---|---|
 | Autor | Andrés Parra S. |
 | Repositorio | [github.com/aparrauio/QBtienda](https://github.com/aparrauio/QBtienda) |
-| Periodo | 20 al 24 de octubre de 2026 |
+| Periodo | 20 de octubre al 4 de noviembre de 2026 |
 | Herramienta | Claude, con herramientas de transcripción de audio, búsqueda web, navegador y edición de archivos |
 
 ## Proceso de creación
 
-El README se construyó en cuatro etapas:
+El README se construyó en cinco etapas:
 
 1. **Descubrimiento:** se transcribió la entrevista con la dueña de la marca, que es la fuente de los requisitos.
 2. **Producto:** a partir de la transcripción se definieron el objetivo, las funcionalidades y la experiencia de usuario, y se analizó un sitio de referencia para la funcionalidad de cajas de regalo.
 3. **Técnica:** primero se definió la arquitectura con los lineamientos del autor y se resolvieron las dudas técnicas. Después se trabajaron el modelo de datos, la API, las historias de usuario, los tickets y las pull requests.
 4. **Cierre:** se completó la ficha del proyecto y se agregó el índice.
+5. **Ajustes tras la revisión:** se analizó de forma imparcial el feedback de la revisión de la Entrega 1. El autor decidió qué mejoras aceptar, y se aplicaron primero en la carpeta local del repositorio y luego con push a una rama nueva.
 
 Desde la sección 3, cada sección se generó como **borrador aparte**. El autor la validaba y solo entonces se integraba al README. Las confirmaciones cortas de ese ciclo ("Está correcto, únelo al README") no se registran porque no generaron contenido nuevo.
 
@@ -42,6 +43,9 @@ Los prompts se numeran en orden cronológico y se transcriben textualmente.
 | [6. Tickets de trabajo](#6-tickets-de-trabajo) | Tickets QB-12, QB-21 y QB-34 | P10 |
 | | Dependencias descritas sin referencias a tickets no documentados | P11 |
 | [7. Pull requests](#7-pull-requests) | Flujo de revisión, plantilla y pull requests 1, 2 y 3 | P11 |
+| [9. Ajustes tras la revisión](#9-ajustes-tras-la-revisión-de-la-entrega-1) (varias secciones) | Análisis del feedback, sin modificar el documento | P14 |
+| | Sincronización con GitHub y la carpeta local, y rama `feature/ajustes-feedback-entrega-1` | P15 |
+| | 1.2, 1.3, 2.1 a 2.6, 3, 4, 5, 6 y 7: alcance del MVP, transferencia primero, cabos sueltos, casos de precio compartidos y nombre `README.md` | P16 |
 
 ---
 
@@ -239,3 +243,58 @@ Si haz el reemplazo por la descripción breve y júntalo al README. Luego escrib
 ```
 
 **Qué generó:** en la sección 6, las referencias a tickets no documentados se reemplazaron por descripciones breves de cada dependencia. Para la sección 7, como la entrega es solo documentación, se definieron el flujo de trabajo y la plantilla, y se documentaron las tres pull requests como planificadas. Cada una tiene título, rama, archivos que cambia, decisiones para el revisor, comandos para probar, y riesgos con su plan de reversión.
+
+---
+
+## 9. Ajustes tras la revisión de la Entrega 1
+
+> **Partes del README modificadas:** 1.2 (alcance del MVP y prioridades), 1.3, 2.1 a 2.6, 3.1 y 3.2 (tablas de fase 2, contenido de estructura fija y modelo 3D), 4 (ejemplo sin cupón y otros endpoints), 5 (historias 2 y 3), 6 (ticket QB-21) y 7 (PR 2), además del índice y del nombre del archivo, que pasó a `README.md` (P16). P14 y P15 prepararon el trabajo sin modificar el documento.
+
+#### Prompt 14 · Análisis imparcial del feedback
+
+```text
+[Se adjuntó el PDF con la revisión de la Entrega 1]
+
+Tengo feedback acerca del estado del proyecto. El documento adjunto contiene observaciones y comentarios acerca del proyecto.
+
+No quiero que modifiques ningún archivo, solo quiero que analices el contenido del feedback y me indiques qué cambios o mejoras sugiere el revisor y el impacto que tendría con el planteamiento actual del proyecto. Se lo más imparcial posible, de manera que cada oportunidad de mejora sea evaluada de forma honesta para decidir si se aceptan o se rechazan. Ordénalas de mayor a menor impacto.
+```
+
+**Qué generó:** ocho oportunidades de mejora ordenadas por impacto. Cada una incluye lo que sugiere el revisor, su impacto en el planteamiento actual, argumentos a favor y en contra, y una recomendación: aceptar, aceptar parcialmente o rechazar. No se modificó ningún archivo.
+
+#### Prompt 15 · Sincronización con el repositorio y la carpeta local
+
+Tres mensajes consecutivos:
+
+```text
+Antes de avanzar, puedes sincronizar desde aquí un repositorio de GitHub que contiene los mismos documentos que generamos aqui?
+```
+
+```text
+Adicional al repo en GitHub, te acabo de dar acceso a la carpeta local. Cualquier cambio se escribe primero sobre estos archivos y luego hacemos push
+```
+
+```text
+Haremos los cambios en esta rama nueva: feature/ajustes-feedback-entrega-1
+```
+
+**Qué generó:** se conectó el repositorio y se comprobó que la carpeta local, el clon de la sesión y GitHub estaban en el mismo commit, con archivos idénticos. Se acordó el flujo de trabajo (los cambios se escriben primero en la carpeta local y después se hace push) y se creó la rama nueva en ambas copias.
+
+#### Prompt 16 · Decisiones sobre las mejoras
+
+Respuesta del autor a las opciones que planteó el asistente sobre el alcance del MVP, las mejoras a aplicar y los extras:
+
+```text
+Alcance del MVP: La experiencia de usuario es lo más importante, por más que estemos en etapa MVP. El visor avanzado de productos se queda en fase 1. Todo lo demás lo podemos mover a la siguiente fase.
+Mejoras a aplicar: Transferencia primero, Corregir cabos sueltos, Casos de precio compartidos
+Extras: Renombrar a README.md
+```
+
+**Qué generó:**
+- **Alcance:** el visor 3D se queda en la fase 1. Pasan a la fase 2 el editor por bloques (las fichas tienen estructura fija y se completan desde formularios), el código por correo y las direcciones guardadas, la importación de clientes, el staging separado y las promociones. Se mantuvieron el MFA y Turnstile.
+- **Transferencia primero:** se reordenó la historia 2, y el ticket QB-21 y la PR 2 pasaron a la carga y revisión del comprobante de transferencia.
+- **Cabos sueltos:** ejemplo de la API sin cupón, aprobación del pago con ticket propio, wireframes como bloqueo del ticket de frontend y tabla de otros endpoints del BFF.
+- **Casos de precio compartidos:** archivo `casos-precio.json`, usado por los tests de TypeScript y de SQL.
+- **Nombre del archivo:** `readme.md` pasó a `README.md`, lo que arregla el enlace desde este documento.
+
+Se validaron los diagramas Mermaid, la especificación OpenAPI y los enlaces del índice. Luego se escribieron los cambios en la carpeta local y se subieron en el commit `127ea8a`.
