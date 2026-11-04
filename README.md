@@ -24,20 +24,22 @@
 - [4. Especificación de la API](#4-especificación-de-la-api)
    - [Especificación OpenAPI](#especificación-openapi)
    - [Notas sobre cada endpoint](#notas-sobre-cada-endpoint)
+   - [Otros endpoints del BFF](#otros-endpoints-del-bff)
 - [5. Historias de Usuario](#5-historias-de-usuario)
    - [Historia de Usuario 1 — Armar una caja de regalo](#historia-de-usuario-1--armar-una-caja-de-regalo)
    - [Historia de Usuario 2 — Comprar sin cuenta con un checkout simple](#historia-de-usuario-2--comprar-sin-cuenta-con-un-checkout-simple)
    - [Historia de Usuario 3 — Publicar una página de producto desde el panel](#historia-de-usuario-3--publicar-una-página-de-producto-desde-el-panel)
 - [6. Tickets de Trabajo](#6-tickets-de-trabajo)
    - [Ticket 1 — QB-12 · Tablas de pedidos y función crear_pedido()](#ticket-1--qb-12--tablas-de-pedidos-y-función-crear_pedido)
-   - [Ticket 2 — QB-21 · Endpoint de confirmación de pagos con Payphone](#ticket-2--qb-21--endpoint-de-confirmación-de-pagos-con-payphone)
+   - [Ticket 2 — QB-21 · Carga y revisión del comprobante de transferencia](#ticket-2--qb-21--carga-y-revisión-del-comprobante-de-transferencia)
    - [Ticket 3 — QB-34 · Isla interactiva "Crea tu propia caja"](#ticket-3--qb-34--isla-interactiva-crea-tu-propia-caja)
 - [7. Pull Requests](#7-pull-requests)
    - [Pull Request 1 — Tablas de pedidos y función crear_pedido()](#pull-request-1--tablas-de-pedidos-y-función-crear_pedido)
-   - [Pull Request 2 — Endpoint de confirmación de pagos con Payphone](#pull-request-2--endpoint-de-confirmación-de-pagos-con-payphone)
+   - [Pull Request 2 — Carga y revisión del comprobante de transferencia](#pull-request-2--carga-y-revisión-del-comprobante-de-transferencia)
    - [Pull Request 3 — Isla "Crea tu propia caja"](#pull-request-3--isla-crea-tu-propia-caja)
 
 ---
+
 ## 0. Ficha del proyecto
 
 ### **0.1. Tu nombre completo:**
@@ -120,16 +122,25 @@ Cada funcionalidad responde a una necesidad que salió en la entrevista. La prio
 | F1 | Catálogo curado por categorías | "Que sea fácil encontrar lo que esté buscando, que tengan las categorías bien definidas." | MVP |
 | F2 | Ficha de producto con información clara | "Que en la página esté toda muy clara la información." | MVP |
 | F3 | Personalizador por modelos base | "Personalizar sí va, sí o sí", pero "no personalizar cada detalle". | MVP |
-| F4 | Exploración interactiva del producto | Preguntas frecuentes como "¿cómo es por dentro el cuaderno?" | MVP (versión básica) |
-| F5 | Carrito y pago en línea | "Que paguen por su lado." | MVP |
+| F4 | Exploración interactiva del producto | Preguntas frecuentes como "¿cómo es por dentro el cuaderno?" | MVP, incluido el visor 3D |
+| F5 | Carrito y pago en línea | "Que paguen por su lado." | MVP (primero transferencia, luego Payphone) |
 | F6 | Envío o retiro en el checkout | Los datos de envío hoy se piden por chat. | MVP |
 | F7 | Chat posterior a la compra | "Que se realice la compra y después se haga un chat personal." | MVP |
-| F8 | Base de clientes (mini CRM) | Teléfonos dispersos en los chats; deseo de clientes fijos. | MVP |
+| F8 | Base de clientes (mini CRM) | Teléfonos dispersos en los chats; deseo de clientes fijos. | MVP (importación de la lista actual: fase 2) |
 | F9 | Promociones y lanzamientos para la comunidad | "Tal vez lo de las promociones, sí." | Fase 2 |
-| F10 | Panel de administración | Gestión autónoma de productos y pedidos. | MVP |
+| F10 | Panel de administración | Gestión autónoma de productos y pedidos. | MVP (editor por bloques: fase 2) |
 | F11 | Sección "Detrás de la marca" | Generar confianza ("una persona detrás de la pantalla"). | MVP |
 | F12 | Crea tu propia caja de regalo | Las cajas de regalo hoy se cotizan pieza por pieza en el chat; Gaby quiere que "paguen por su lado". | MVP (varias cajas por pedido y tarjeta corporativa: fase 2) |
 | — | Realidad aumentada | "No me suena tanto." | Fuera de alcance |
+
+**Alcance del MVP (ajustado tras la revisión de la Entrega 1):** la primera versión se centra en el camino de compra, sin sacrificar la experiencia de usuario, que es la prioridad del proyecto. Por eso el visor avanzado (F4) se mantiene en la fase 1. Pasan a la fase 2:
+- el editor de páginas por bloques: en el MVP, las fichas tienen estructura fija y se completan desde un formulario;
+- el código por correo para clientes recurrentes y sus direcciones guardadas;
+- la importación de la lista actual de clientes;
+- el entorno de staging separado;
+- las promociones y los lanzamientos (F9).
+
+En pagos, primero se implementa la transferencia, que hoy concentra cerca del 90 % de las ventas, y después Payphone.
 
 #### F1. Catálogo curado por categorías
 - Catálogo acotado a **unos 20 productos** en **unas 4 categorías** (por ejemplo: cuadernos, álbumes, cajas de regalo, detalles en madera). La dueña considera que tiene demasiados productos y prefiere una selección.
@@ -149,7 +160,7 @@ Cada funcionalidad responde a una necesidad que salió en la entrevista. La prio
 
 #### F4. Exploración interactiva del producto
 - Visor que permite "abrir" el producto: hojear el cuaderno, ver el tipo de hojas, ver el interior de un álbum o qué contiene una caja de regalo.
-- Primera versión: secuencias de fotos o video interactivo. Versión posterior: visor 3D, que la dueña sí ve útil para el catálogo.
+- Incluido en el MVP: un visor 3D en el que el cliente gira y acerca el producto, con animaciones de apertura (hojear el cuaderno, abrir la caja). La dueña lo ve útil para el catálogo y la experiencia de usuario es la prioridad del proyecto. Si un producto no tiene modelo 3D, el visor usa una secuencia de fotos.
 - **Realidad aumentada: fuera de alcance**, porque la dueña no la ve alineada con su marca.
 
 #### F5. Carrito y pago en línea
@@ -169,7 +180,7 @@ Cada funcionalidad responde a una necesidad que salió en la entrevista. La prio
 
 #### F8. Base de clientes (mini CRM)
 - Registro automático de cada comprador: nombre, contacto (teléfono y correo), ciudad, pedidos, fechas y montos.
-- **Importación de la lista actual** de clientes (nombres, compras y ciudades) para no partir de cero.
+- **Importación de la lista actual** de clientes (nombres, compras y ciudades), para no partir de cero: fase 2.
 - Historial de compras por cliente e identificación de clientes recurrentes.
 
 #### F9. Promociones y lanzamientos para la comunidad (fase 2)
@@ -179,6 +190,7 @@ Cada funcionalidad responde a una necesidad que salió en la entrevista. La prio
 
 #### F10. Panel de administración
 - Alta y edición de productos, modelos base y opciones de personalización.
+- Fichas de producto, colecciones y "Detrás de la marca" con estructura fija, completadas desde formularios. El editor por bloques queda para la fase 2.
 - Gestión de pedidos y cambio de estados.
 - Consulta de la base de clientes.
 - Indicadores básicos: pedidos por la web, ingresos y clientes recurrentes.
@@ -186,6 +198,7 @@ Cada funcionalidad responde a una necesidad que salió en la entrevista. La prio
 #### F11. Sección "Detrás de la marca"
 - Historia de Gaby y del proceso artesanal (taller, manos, materiales).
 - Refuerza la confianza y la diferenciación. En Instagram, el contenido con la fundadora duplica la interacción del contenido de solo producto.
+- En el MVP es una página de estructura fija que Gaby completa desde un formulario.
 
 #### F12. Crea tu propia caja de regalo
 
@@ -275,7 +288,7 @@ flowchart TD
 1. **Inicio:** mensaje de marca (regalos de diseño propio, hechos a mano en Quito), acceso directo a las ~4 categorías y a **"Crea tu propia caja"**, productos destacados y un bloque breve "Detrás de la marca" con Gaby.
 2. **Categoría:** cuadrícula limpia de productos con foto, nombre y precio base. Sin filtros complejos, porque el catálogo es pequeño.
 3. **Ficha de producto:** galería de fotos y videos propios, descripción, materiales, tiempos de elaboración y preguntas frecuentes, con un llamado claro a "Personalizar".
-4. **Exploración interactiva:** visor para hojear el cuaderno, ver el tipo de hojas o el interior de una caja de regalo. Responde antes de comprar las preguntas que hoy llegan por chat.
+4. **Exploración interactiva:** visor 3D para girar y acercar el producto, hojear el cuaderno, ver el tipo de hojas o el interior de una caja de regalo. Responde antes de comprar las preguntas que hoy llegan por chat.
 5. **Personalizador:** el usuario elige un modelo base y avanza por pasos (color, nombre o texto, tipo de hojas o material), con vista previa y precio actualizado.
 6. **Crea tu propia caja:** un configurador por pasos con un indicador de avance ("Paso 2 de 5"). Un **panel fijo** muestra la caja en construcción: miniaturas de las piezas, control de cantidad, botón para quitar, espacios usados y **subtotal en vivo**. En el celular, ese panel se convierte en una barra inferior desplegable con el subtotal y el botón "Siguiente". El último paso muestra la vista previa con el desglose del precio antes de agregar la caja al carrito.
 7. **Carrito:** lista de productos con el resumen de su personalización, opción de editar y total.
@@ -287,9 +300,9 @@ flowchart TD
 
 1. **Acceso al panel**, con inicio de sesión.
 2. **Pedidos:** lista de pedidos nuevos con su personalización, comprobantes de transferencia por validar y cambio de estado.
-3. **Catálogo:** alta y edición de productos, modelos base, opciones de personalización y contenido multimedia.
+3. **Catálogo:** alta y edición de productos, modelos base, opciones de personalización, contenido multimedia (fotos, videos y modelos 3D) y la ficha de cada producto, completada desde un formulario.
 4. **Configurador de cajas:** qué productos están habilitados para caja y cuántos espacios ocupa cada uno, tamaños y diseños de caja con su precio y capacidad, diseños de tarjeta y ocasiones de filtro. En los pedidos con cajas armadas se ve el contenido completo y la dedicatoria que hay que escribir a mano.
-5. **Clientes:** base de clientes con historial de compras e importación de la lista existente.
+5. **Clientes:** base de clientes con historial de compras. La importación de la lista existente llega en la fase 2.
 6. **Promociones (fase 2):** creación de cupones y lanzamientos exclusivos para clientes recurrentes.
 7. **Indicadores:** pedidos web, ingresos y porcentaje de clientes recurrentes.
 
@@ -327,7 +340,7 @@ flowchart LR
 
     subgraph Supabase
         DB[("PostgreSQL<br/>RLS + funciones")]
-        AU["Auth<br/>OTP por correo · MFA"]
+        AU["Auth<br/>MFA de la administradora"]
         ST["Storage<br/>buckets públicos y privados"]
         CR["pg_cron + pg_net<br/>tareas y webhooks"]
     end
@@ -381,7 +394,7 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 | **Un solo lenguaje** | TypeScript en la tienda, el panel, los endpoints y los scripts. Los tipos de la base de datos se generan automáticamente desde Supabase. |
 | **Seguridad por diseño** | Las reglas de acceso viven en la base de datos (RLS), así que se aplican igual desde la tienda, el panel o cualquier cliente. |
 | **Infraestructura mínima** | Un proceso Node.js, un sitio estático y un proyecto de Supabase. No hay servidores propios ni contenedores. |
-| **Contenido editable sin código** | Las páginas se arman con bloques predefinidos desde el panel y se publican al instante, sin redesplegar. |
+| **Contenido editable sin código** | Las fichas y páginas se completan desde formularios del panel y se publican al instante, sin redesplegar. |
 | **Crecimiento sin reescritura** | Si el tráfico crece, la tienda pasa a un plan Cloud o a un VPS de Hostinger sin cambiar la arquitectura. |
 
 #### Sacrificios y riesgos
@@ -390,10 +403,10 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 |---|---|
 | Dependencia de Supabase (proveedor gestionado). | Todo el esquema está en migraciones SQL versionadas. Supabase usa PostgreSQL estándar, así que la base de datos es portable. |
 | Recursos compartidos en Hostinger y sin procesos en segundo plano. | Las tareas largas o programadas van a `pg_cron`. Las páginas se cachean para reducir la carga. |
-| Dos aplicaciones que mantener (tienda y panel). | Comparten un paquete común (tipos, validaciones, bloques y precios) y un pipeline de CI único. |
+| Dos aplicaciones que mantener (tienda y panel). | Comparten un paquete común (tipos, validaciones, contenido y precios) y un pipeline de CI único. |
 | Ventana de 5 minutos de Payphone: si el comprador cierra el navegador antes de volver a la tienda, el pago se revierte. | Se muestra un estado claro de "pago no completado" con la opción de reintentar. Hay que consultar a Payphone si ofrece notificación de servidor a servidor. |
 | La Cajita de Pagos necesita el token de Payphone en el navegador, por diseño del proveedor. | Payphone solo permite usarla en el dominio registrado. La confirmación se hace en el servidor y valida el monto contra el pedido. Hay que consultar a Payphone si puede emitir un token aparte para la confirmación. |
-| El plan gratuito de Supabase pausa el proyecto por inactividad y no incluye respaldos automáticos. | Usar el plan Pro en producción. El plan gratuito queda para desarrollo y staging. |
+| El plan gratuito de Supabase pausa el proyecto por inactividad y no incluye respaldos automáticos. | Usar el plan Pro en producción. El plan gratuito queda para desarrollo. |
 
 ### **2.2. Descripción de componentes principales:**
 
@@ -401,11 +414,11 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 |---|---|---|
 | **Tienda** | Astro (SSR con `@astrojs/node`), React para las islas, Tailwind CSS, nanostores, Zod | Páginas públicas, configuradores, carrito y checkout. |
 | **Endpoints BFF** | Rutas `/api` de Astro sobre Node.js 22 | Crear pedidos, confirmar pagos, enviar correos, revalidar la caché. |
-| **Panel de administración** | Vite + React + Refine (`@refinedev/supabase`), editor de bloques con dnd-kit | Gestión de catálogo, contenido, pedidos, clientes y promociones. |
-| **Paquete compartido** | TypeScript + Zod | Tipos de la base de datos, esquemas de validación, motor de precios y catálogo de bloques. |
+| **Panel de administración** | Vite + React + Refine (`@refinedev/supabase`) | Gestión de catálogo, fichas, pedidos, comprobantes y clientes. |
+| **Paquete compartido** | TypeScript + Zod | Tipos de la base de datos, esquemas de validación, motor de precios, esquemas de contenido de las fichas y casos de precio compartidos. |
 | **Base de datos** | Supabase PostgreSQL, RLS, funciones SQL | Datos del negocio, reglas de acceso y lógica crítica (precios, pedidos, pagos). |
-| **Autenticación** | Supabase Auth | OTP por correo para clientes recurrentes (opcional) y acceso con MFA para la administradora. |
-| **Archivos** | Supabase Storage | Fotos y videos de producto (públicos), comprobantes de transferencia (privados). |
+| **Autenticación** | Supabase Auth | Acceso con MFA para la administradora. Las cuentas de clientes recurrentes con código por correo llegan en la fase 2. |
+| **Archivos** | Supabase Storage | Fotos, videos y modelos 3D de producto (públicos), comprobantes de transferencia (privados). |
 | **Tareas programadas** | `pg_cron` y `pg_net` en Supabase | Liberar pedidos sin pago, recordatorios, segmentación del CRM, webhooks de revalidación. |
 | **Pasarela de pago** | Payphone, Cajita de Pagos + API de confirmación | Cobro con tarjeta o saldo Payphone sin salir de la tienda. |
 | **Correo transaccional** | SMTP de Hostinger con Nodemailer | Confirmación de pedido, cambios de estado y enlace de seguimiento. |
@@ -416,18 +429,18 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 - **Islas interactivas (React):**
   - `Personalizador` (F3): modelo base y opciones del producto.
   - `CreaTuCaja` (F12): productos, capacidad, caja, dedicatoria y vista previa.
-  - `VisorProducto` (F4): exploración interactiva del producto.
+  - `VisorProducto` (F4): visor 3D con el componente web `<model-viewer>` (modelos glTF/GLB), con una secuencia de fotos como respaldo y la realidad aumentada desactivada. Se carga cuando el visor entra en pantalla, para no afectar la carga inicial de la ficha.
   - `Carrito` y `Checkout` (F5, F6).
 - **Estado del carrito:** se guarda con nanostores en el almacenamiento local del navegador. Solo contiene identificadores de producto y opciones, nunca precios autoritativos ni datos personales.
-- **Precio en pantalla:** el motor de precios del paquete compartido calcula el subtotal al instante en el navegador. El precio que se cobra lo recalcula siempre la base de datos al crear el pedido.
-- **Bloques de contenido:** las páginas de producto, las colecciones y "Detrás de la marca" se renderizan a partir de una lista de bloques tipados en JSON (portada, galería, texto, visor interactivo, preguntas frecuentes, botón de personalizar, testimonios). Cada tipo de bloque tiene un componente visual en la tienda.
+- **Precio en pantalla:** el motor de precios del paquete compartido calcula el subtotal al instante en el navegador. El precio que se cobra lo recalcula siempre la base de datos al crear el pedido. Las dos implementaciones se prueban contra el mismo archivo de casos (sección 2.6).
+- **Fichas con estructura fija:** la ficha de producto, las colecciones y "Detrás de la marca" usan plantillas con secciones fijas (portada, galería, visor interactivo, descripción, preguntas frecuentes, botón de personalizar). Su contenido se edita desde formularios del panel y se guarda como JSON validado. El editor por bloques, que permitirá reordenar y agregar secciones, queda para la fase 2.
 - **Imágenes:** se sirven en WebP o AVIF y al tamaño exacto, con carga diferida. Se usan las transformaciones de imagen de Supabase (plan Pro) o, como alternativa, la optimización de Astro.
 
 #### Endpoints BFF (`/api`)
 
 | Endpoint | Función |
 |---|---|
-| `POST /api/pedidos` | Valida el carrito y los datos de entrega con Zod y llama a la función `crear_pedido()` de la base de datos. Esa función recalcula los precios, valida la capacidad de las cajas, el stock y los cupones, y devuelve el código del pedido y el monto en centavos para Payphone. |
+| `POST /api/pedidos` | Valida el carrito y los datos de entrega con Zod y llama a la función `crear_pedido()` de la base de datos. Esa función recalcula los precios, valida la capacidad de las cajas y el stock, y devuelve el código del pedido y el monto en centavos para Payphone. |
 | `POST /api/pagos/payphone/confirmar` | Lo llama la página de retorno de Payphone (`/pago/respuesta`). Confirma la transacción con la API de Payphone y registra el pago con `registrar_pago()`. Es idempotente. |
 | `POST /api/pedidos/{token}/comprobante` | Recibe el comprobante de transferencia, lo guarda en un bucket privado y pasa el pedido a revisión. |
 | `POST /api/revalidar` | Invalida la caché de las páginas afectadas cuando se publica contenido. Está protegido con un secreto compartido. |
@@ -444,7 +457,7 @@ sequenceDiagram
     participant PP as Payphone
     C->>T: Completa el checkout
     T->>API: POST /api/pedidos con carrito y entrega
-    API->>DB: crear_pedido() recalcula precios, cupón y capacidad
+    API->>DB: crear_pedido() recalcula precios, envío y capacidad
     DB-->>API: Pedido pendiente_pago con código y total
     API-->>T: Código del pedido y monto en centavos
     T->>PP: Muestra la Cajita con clientTransactionId igual al código
@@ -459,20 +472,20 @@ sequenceDiagram
 
 #### Panel de administración (React + Refine)
 
-- **Recursos CRUD:** productos, modelos base, opciones de personalización, categorías, colecciones, tamaños y diseños de caja, tarjetas, pedidos, clientes, cupones y lanzamientos.
-- **Editor de páginas por bloques:** Gaby agrega, ordena (arrastrar y soltar) y edita bloques predefinidos. Cada bloque se valida con su esquema Zod del paquete compartido.
+- **Recursos CRUD:** productos, modelos base, opciones de personalización, categorías, colecciones, tamaños y diseños de caja, tarjetas, pedidos y clientes. Los cupones y lanzamientos llegan en la fase 2.
+- **Formularios de fichas:** Gaby completa las secciones fijas de cada ficha (textos, preguntas frecuentes, medios y modelo 3D). Cada sección se valida con su esquema Zod del paquete compartido. El editor por bloques queda para la fase 2.
 - **Borrador y publicación:** el contenido tiene estado borrador o publicado. La vista previa abre la página real de la tienda en un marco con un token temporal. Al publicar, se dispara la revalidación.
-- **Mini CRM:** clientes creados automáticamente con cada pedido, historial, segmentos (nuevo, recurrente, inactivo) e importación de la lista actual en CSV.
-- **Promociones y lanzamientos:** cupones con reglas y vigencia, y lanzamientos programados con acceso anticipado para un segmento de clientes.
+- **Mini CRM:** clientes creados automáticamente con cada pedido, historial, segmentos (nuevo, recurrente, inactivo). La importación de la lista actual en CSV llega en la fase 2.
+- **Promociones y lanzamientos (fase 2):** cupones con reglas y vigencia, y lanzamientos programados con acceso anticipado para un segmento de clientes.
 - **Pedidos:** cambio de estados, validación de comprobantes de transferencia y vista de las cajas armadas con la dedicatoria que hay que escribir a mano.
 - **Despliegue:** se compila a archivos estáticos y se sirve en un subdominio propio. No consume un proceso Node.js y queda aislado de la tienda.
 
 #### Base de datos (Supabase)
 
-- **Lógica crítica en funciones SQL:** `crear_pedido()`, `cotizar_carrito()`, `registrar_pago()`, `aplicar_cupon()` y `publicar_contenido()`. Las ejecuta la base de datos, así que nadie puede saltarse las reglas desde el navegador.
+- **Lógica crítica en funciones SQL:** `crear_pedido()`, `registrar_comprobante()`, `revisar_comprobante()`, `registrar_pago()` y `publicar_contenido()`. `aplicar_cupon()` llega con las promociones de la fase 2. Las ejecuta la base de datos, así que nadie puede saltarse las reglas desde el navegador.
 - **RLS en todas las tablas:** el catálogo publicado es de lectura pública, y la escritura queda reservada a la administradora con MFA. Los clientes autenticados solo ven sus propios pedidos y direcciones.
 - **Triggers:** alta automática del cliente en el CRM al crear un pedido, registro de auditoría de las acciones administrativas y webhook de revalidación al publicar.
-- **Tareas programadas con `pg_cron`:** liberar pedidos con transferencia sin comprobante después de 48 horas, recalcular segmentos del CRM cada noche y activar los lanzamientos en su fecha.
+- **Tareas programadas con `pg_cron`:** liberar pedidos con transferencia sin comprobante después de 48 horas y recalcular segmentos del CRM cada noche. La activación de lanzamientos llega en la fase 2.
 
 ### **2.3. Descripción de alto nivel del proyecto y estructura de ficheros**
 
@@ -489,7 +502,7 @@ QBtienda/
 │   │   │   │   └── api/           # Endpoints BFF: pedidos, pagos, comprobantes, revalidar
 │   │   │   ├── islands/           # Componentes React interactivos: Personalizador,
 │   │   │   │                      # CreaTuCaja, VisorProducto, Carrito, Checkout
-│   │   │   ├── blocks/            # Un componente visual por tipo de bloque de contenido
+│   │   │   ├── secciones/         # Secciones de las plantillas fijas (galería, visor, preguntas frecuentes)
 │   │   │   ├── components/        # Componentes Astro estáticos (cabecera, tarjetas, pie)
 │   │   │   ├── layouts/           # Plantillas de página
 │   │   │   ├── lib/               # Clientes de Supabase (servidor y navegador),
@@ -503,21 +516,23 @@ QBtienda/
 │       └── src/
 │           ├── resources/         # Una carpeta por recurso: productos, categorias,
 │           │                      # colecciones, cajas, pedidos, clientes,
-│           │                      # promociones, paginas
+│           │                      # paginas (promociones en la fase 2)
 │           ├── components/
-│           │   └── editor-bloques/ # Editor de páginas por bloques y vista previa
+│           │   └── formularios-ficha/ # Formularios de las fichas y vista previa
 │           ├── providers/         # Proveedores de datos y autenticación de Supabase
 │           └── App.tsx
 ├── packages/
 │   └── shared/                    # Código compartido entre tienda y panel
+│       ├── fixtures/
+│       │   └── casos-precio.json  # Casos de precio compartidos por TypeScript y SQL
 │       └── src/
 │           ├── database.types.ts  # Tipos generados desde Supabase
-│           ├── schemas/           # Esquemas Zod (carrito, checkout, bloques, cupones)
+│           ├── schemas/           # Esquemas Zod (carrito, checkout, contenido, pagos)
 │           ├── pricing/           # Motor de precios (productos, cajas, cupones, envío)
-│           └── blocks/            # Catálogo de tipos de bloque y sus campos
+│           └── contenido/         # Esquemas de las secciones de cada plantilla
 ├── supabase/
 │   ├── migrations/                # Esquema, RLS, funciones y triggers en SQL versionado
-│   ├── tests/                     # Pruebas de base de datos y RLS (pgTAP)
+│   ├── tests/                     # Pruebas pgTAP; fixtures/ se genera desde casos-precio.json
 │   ├── seed.sql                   # Datos de ejemplo para desarrollo
 │   └── config.toml                # Configuración del entorno local de Supabase
 ├── tests/
@@ -533,7 +548,7 @@ QBtienda/
 |---|---|---|
 | `apps/tienda` | Sitio público y endpoints de servidor. | Arquitectura de islas con BFF. |
 | `apps/admin` | Panel de administración. | Organización por recursos, al estilo de Refine. |
-| `packages/shared` | Fuente única de verdad para tipos, validaciones, precios y bloques. | Núcleo de dominio compartido. |
+| `packages/shared` | Fuente única de verdad para tipos, validaciones, precios, contenido de las fichas y casos de precio. | Núcleo de dominio compartido. |
 | `supabase` | Esquema, reglas de acceso y lógica de base de datos como código. | Migraciones versionadas (*database as code*). |
 | `tests/e2e` | Recorridos completos del comprador y de la administradora. | Pruebas de extremo a extremo. |
 
@@ -542,8 +557,7 @@ QBtienda/
 ```mermaid
 flowchart LR
     DEV["Desarrollo local<br/>Supabase CLI + Docker"] -->|push o pull request| GH["GitHub"]
-    GH --> CI["GitHub Actions<br/>lint · tipos · tests · build"]
-    CI -->|merge a staging| STG["Staging<br/>Supabase staging + app Node en Hostinger"]
+    GH --> CI["GitHub Actions<br/>lint · tipos · tests · E2E · build"]
     CI -->|merge a main| MIG["supabase db push<br/>migraciones en producción"]
     MIG --> REL["Actualiza la rama release"]
     REL --> TI["Hostinger detecta el push<br/>build y reinicio de la tienda"]
@@ -558,23 +572,23 @@ flowchart LR
 |---|---|---|
 | Tienda | Hostinger, aplicación Node.js (Node 22) | Conectada a GitHub. Hostinger compila y reinicia la aplicación en cada push a la rama `release`. |
 | Panel | Hostinger, sitio estático en subdominio | Archivos compilados en GitHub Actions y subidos por SSH. |
-| Staging | Hostinger, segunda aplicación Node.js + proyecto de Supabase aparte | Usa 2 de las 5 aplicaciones Node.js del plan. Se prueba con Payphone en modo de pruebas. |
-| Base de datos, auth, archivos y tareas | Supabase: plan Pro en producción, gratuito en staging | Respaldos diarios en el plan Pro. |
+| Base de datos, auth, archivos y tareas | Supabase: plan Pro en producción, gratuito en desarrollo | Respaldos diarios en el plan Pro. |
 | Dominio, SSL y correo | Hostinger | Certificado SSL gratuito, requisito de Payphone en producción. El correo del dominio se usa como SMTP. |
-| Pagos | Payphone | Entorno de pruebas para staging y de producción en el dominio registrado. |
+| Pagos | Payphone | Entorno de pruebas en desarrollo local y de producción en el dominio registrado. Se integra después del pago por transferencia. |
 
 #### Proceso de despliegue
 
 1. **Desarrollo:** cada cambio se trabaja en una rama propia con Supabase local. Los cambios de base de datos se crean como migraciones SQL.
-2. **Pull request:** GitHub Actions ejecuta lint, verificación de tipos, pruebas unitarias, pruebas de base de datos (pgTAP) y el build de ambas aplicaciones. Si algo falla, el pull request no se puede fusionar.
-3. **Staging:** al fusionar en `staging`, se aplican las migraciones al Supabase de staging, la tienda de staging se recompila y se ejecutan las pruebas de extremo a extremo con Payphone en modo de pruebas.
-4. **Producción:** al fusionar en `main`, GitHub Actions:
+2. **Pull request:** GitHub Actions ejecuta lint, verificación de tipos, pruebas unitarias, pruebas de base de datos (pgTAP), pruebas de extremo a extremo contra un Supabase local y el build de ambas aplicaciones. Si algo falla, el pull request no se puede fusionar.
+3. **Producción:** al fusionar en `main`, GitHub Actions:
    1. aplica las migraciones al Supabase de producción (`supabase db push`);
    2. actualiza la rama `release`, y Hostinger recompila y reinicia la tienda;
    3. compila el panel y lo sube al subdominio por SSH.
 
    Así, la tienda nunca se despliega con una base de datos desactualizada.
-5. **Reversión:** Hostinger conserva los dos últimos builds exitosos. Las migraciones siguen el criterio de "expandir y luego contraer" (primero se agregan columnas, después se eliminan las viejas), para que el código anterior siga funcionando con el esquema nuevo.
+4. **Reversión:** Hostinger conserva los dos últimos builds exitosos. Las migraciones siguen el criterio de "expandir y luego contraer" (primero se agregan columnas, después se eliminan las viejas), para que el código anterior siga funcionando con el esquema nuevo.
+
+> El entorno de staging separado queda para la fase 2. Mientras tanto, cada cambio se prueba en local con Supabase CLI y en la CI, y Gaby valida los cambios visibles en una demo antes de publicarlos.
 
 #### Variables de entorno
 
@@ -618,13 +632,14 @@ flowchart LR
 
 - **Panel con MFA obligatorio.** Para escribir en el panel se exige autenticación de dos factores (TOTP de Supabase) y un registro en la tabla `administradores`. Un usuario que solo inició sesión con contraseña no puede modificar nada.
 - **Compra sin cuenta, con acceso seguro al pedido.** El comprador invitado consulta su pedido con un enlace que lleva un token aleatorio (`/pedido/[token]`), enviado a su correo. Los números de pedido no se pueden adivinar ni recorrer.
-- **Datos de clientes recurrentes protegidos.** Las direcciones guardadas solo se muestran después de verificar el correo con un código OTP. Escribir un correo en el checkout no revela ningún dato.
+- **El correo no revela datos.** Escribir un correo en el checkout no muestra ningún dato asociado ni indica si ya es cliente. En la fase 2, las direcciones guardadas solo se mostrarán después de verificar el correo con un código OTP.
 - **Secretos solo en el servidor.** La clave secreta de Supabase, las credenciales SMTP y los secretos de revalidación nunca llegan al navegador.
 - **Archivos privados.** Los comprobantes de transferencia se guardan en un bucket privado y solo se ven con enlaces firmados de corta duración desde el panel.
 
 #### Integridad de pedidos y pagos
 
-- **El precio nunca viene del navegador.** `crear_pedido()` recalcula en la base de datos el precio de cada producto, personalización, caja, tarjeta, cupón y envío. El precio que muestra la tienda es solo informativo.
+- **El precio nunca viene del navegador.** `crear_pedido()` recalcula en la base de datos el precio de cada producto, personalización, caja, tarjeta y envío. El precio que muestra la tienda es solo informativo.
+- **Transferencias revisadas por la administradora.** El comprobante se guarda en un bucket privado y el pedido solo pasa a pagado cuando Gaby lo aprueba con `revisar_comprobante()`, que exige MFA. Un índice único impide que un pedido tenga dos pagos aprobados.
 - **Confirmación del pago en el servidor.** Al volver de Payphone, el servidor confirma la transacción con la API de Payphone y `registrar_pago()` verifica que:
   - el estado sea aprobado (`statusCode` 3);
   - el monto confirmado coincida con el total del pedido;
@@ -649,8 +664,8 @@ flowchart LR
 
 #### Protección de la aplicación
 
-- **Validación en cliente y servidor** con los mismos esquemas Zod del paquete compartido (checkout, dirección, dedicatoria, cupones, bloques de contenido).
-- **Protección contra bots:** Cloudflare Turnstile en el checkout y en el envío de códigos OTP, que Supabase Auth soporta. Se suman límites de solicitudes por IP en los endpoints `/api` y los límites propios de Supabase Auth.
+- **Validación en cliente y servidor** con los mismos esquemas Zod del paquete compartido (checkout, dirección, dedicatoria, contenido de las fichas).
+- **Protección contra bots:** Cloudflare Turnstile en el checkout. Se suman límites de solicitudes por IP en los endpoints `/api` y los límites propios de Supabase Auth.
 - **Cabeceras de seguridad** desde el middleware de Astro: Content Security Policy (que solo permite los dominios de Supabase y Payphone), HSTS, `X-Content-Type-Options` y `frame-ancestors` (para que la tienda no se pueda incrustar en sitios ajenos).
 - **HTTPS obligatorio** con el certificado SSL de Hostinger, que además es requisito de Payphone.
 - **Auditoría:** un trigger registra quién cambió qué y cuándo en productos, precios, pedidos y cupones.
@@ -670,11 +685,16 @@ flowchart LR
 
 | Tipo | Herramienta | Qué se prueba | Ejemplos de casos |
 |---|---|---|---|
-| **Unitarios** | Vitest | Motor de precios y esquemas del paquete compartido. | Una caja con 3 piezas, personalización y tarjeta suma el total correcto. Una pieza que excede la capacidad de la caja se rechaza. Un cupón vencido no aplica descuento. Una dedicatoria de más de 300 caracteres no pasa la validación. |
-| **Base de datos y RLS** | pgTAP (`supabase test db`) | Reglas de acceso y funciones SQL. | Un visitante no ve productos en borrador. Una sesión sin MFA no puede modificar productos. `crear_pedido()` ignora un precio manipulado desde el cliente. `registrar_pago()` rechaza un monto distinto al del pedido y un segundo pago del mismo pedido. |
-| **Integración de endpoints** | Vitest con la API de Payphone simulada | Flujo de pedido y pago en el servidor. | Pago aprobado: el pedido pasa a "pagado" y se envía el correo. Pago cancelado (`statusCode` 2): el pedido sigue pendiente. Error de red al confirmar: se muestra "pago no completado". |
-| **Extremo a extremo** | Playwright, en escritorio y móvil | Recorridos completos. | Compra como invitado con transferencia y carga de comprobante. Compra con Payphone en modo de pruebas. "Crea tu caja" de principio a fin, con el panel inferior en móvil. Gaby publica un bloque en el panel y aparece en la tienda. |
+| **Unitarios** | Vitest | Motor de precios y esquemas del paquete compartido. | Una caja con 3 piezas, personalización y tarjeta suma el total correcto. Una pieza que excede la capacidad de la caja se rechaza. El IVA se redondea igual que en la base de datos. Una dedicatoria de más de 300 caracteres no pasa la validación. |
+| **Base de datos y RLS** | pgTAP (`supabase test db`) | Reglas de acceso y funciones SQL. | Un visitante no ve productos en borrador. Una sesión sin MFA no puede modificar productos. `crear_pedido()` ignora un precio manipulado desde el cliente y devuelve los totales de cada caso del archivo compartido. `registrar_pago()` rechaza un monto distinto al del pedido y un segundo pago del mismo pedido. |
+| **Integración de endpoints** | Vitest; la API de Payphone se simula con MSW | Flujo de pedido, comprobante y pago en el servidor. | Comprobante válido: el pedido pasa a "pago en revisión". Archivo de un tipo no permitido: 415. Pago con Payphone aprobado: el pedido pasa a "pagado" y se envía el correo. Pago cancelado (`statusCode` 2): el pedido sigue pendiente. Error de red al confirmar: se muestra "pago no completado". |
+| **Extremo a extremo** | Playwright, en escritorio y móvil | Recorridos completos. | Compra como invitado con transferencia y carga de comprobante. Compra con Payphone en modo de pruebas. "Crea tu caja" de principio a fin, con el panel inferior en móvil. Gaby publica una ficha en el panel y aparece en la tienda. |
 | **Rendimiento y accesibilidad** | Lighthouse CI | Presupuestos en cada pull request. | LCP menor a 2,5 s en móvil en la ficha de producto, puntaje de accesibilidad de 90 o más y un presupuesto de JavaScript por página. |
+
+**Casos de precio compartidos.** El precio se calcula en dos lenguajes: TypeScript para la pantalla y SQL para el cobro. Para que nunca difieran, los casos se escriben primero en `packages/shared/fixtures/casos-precio.json`. Cada caso tiene la entrada (productos, cajas, envío y configuración de IVA) y los totales esperados, incluidos los casos límite de redondeo del IVA.
+- Vitest prueba el motor de precios con ese archivo.
+- Un script (`npm run fixtures:sql`) lo convierte a `supabase/tests/fixtures/casos_precio.sql`, para que pgTAP pruebe `crear_pedido()` con los mismos casos.
+- Un caso nuevo se agrega al archivo antes de cambiar cualquiera de las dos implementaciones, y el asistente de IA genera cada implementación contra esos casos.
 
 ---
 
@@ -691,9 +711,11 @@ El modelo vive en **Supabase (PostgreSQL)** y se define con migraciones SQL vers
 | Fechas | `timestamptz` | Hora exacta independiente de la zona horaria del servidor. |
 | Textos únicos sin distinguir mayúsculas | `citext` para correos, slugs y códigos de cupón | `Ana@Mail.com` y `ana@mail.com` se tratan como el mismo correo. |
 | Historial de pedidos | **Copia (snapshot)** del nombre, precio y opciones en cada línea de pedido | Si Gaby cambia un precio o borra una opción, los pedidos anteriores no cambian. |
-| Contenido editable | `jsonb` para los bloques de página, con versión borrador y versión publicada | Gaby edita sin afectar lo publicado. Los tipos de bloque se validan con Zod en el paquete compartido. |
+| Contenido editable | `jsonb` con estructura fija por tipo de página, con versión borrador y versión publicada | Gaby edita sin afectar lo publicado. Cada sección se valida con Zod en el paquete compartido. En la fase 2, la misma columna podrá guardar bloques. |
 | Borrado | Estados (`borrador`, `publicado`, `archivado`, `activo`) en lugar de borrar filas | Se conserva la integridad de los pedidos y del historial. |
 | Usuarios | Las cuentas viven en `auth.users`, que gestiona Supabase Auth; las tablas propias se vinculan a ella | La autenticación queda en Supabase y los datos de negocio, en tablas propias. |
+
+**Alcance del MVP:** las tablas marcadas como *fase 2* (`direcciones`, `compras_historicas`, `cupones`, `cupon_usos` y `lanzamientos`) se documentan para mostrar el modelo completo, pero no se migran en la primera versión. La columna `pedidos.cupon_id` se agrega junto con su tabla en la fase 2.
 
 ### **3.1. Diagrama del modelo de datos:**
 
@@ -858,8 +880,8 @@ erDiagram
         uuid coleccion_id FK, UK "solo tipo coleccion"
         citext slug UK "NOT NULL"
         text titulo "NOT NULL"
-        jsonb bloques_borrador "DEFAULT []"
-        jsonb bloques_publicados
+        jsonb contenido_borrador "estructura fija por tipo"
+        jsonb contenido_publicado
         estado_publicacion estado "DEFAULT borrador"
         timestamptz publicado_en
         uuid actualizado_por FK
@@ -1079,7 +1101,7 @@ erDiagram
     }
 ```
 
-#### Promociones, administración y auditoría (F9, F10)
+#### Promociones (fase 2), administración y auditoría (F9, F10)
 
 ```mermaid
 erDiagram
@@ -1182,9 +1204,9 @@ stateDiagram-v2
 | Tipo | Valores | Uso |
 |---|---|---|
 | `estado_publicacion` | `borrador`, `publicado`, `archivado` | Productos, colecciones y páginas. |
-| `tipo_medio` | `imagen`, `video` | Medios de producto. |
+| `tipo_medio` | `imagen`, `video`, `modelo_3d` | Medios de producto. `modelo_3d` es el archivo GLB del visor (F4). |
 | `tipo_opcion` | `seleccion`, `color`, `texto` | Opciones de personalización. |
-| `tipo_pagina` | `inicio`, `producto`, `coleccion`, `marca`, `libre` | Páginas editables por bloques. |
+| `tipo_pagina` | `inicio`, `producto`, `coleccion`, `marca`, `libre` | Páginas editables, con estructura fija en el MVP. |
 | `origen_cliente` | `web`, `importado` | Si el cliente compró en la web o viene de la lista actual. |
 | `segmento_cliente` | `nuevo`, `recurrente`, `inactivo` | Segmentación del mini CRM. |
 | `estado_pedido` | `pendiente_pago`, `pago_en_revision`, `pagado`, `en_elaboracion`, `enviado`, `listo_retiro`, `entregado`, `cancelado`, `expirado` | Ciclo de vida del pedido. |
@@ -1236,13 +1258,13 @@ stateDiagram-v2
 | `seo_titulo`, `seo_descripcion` | `text` | | Metadatos para buscadores y redes sociales. |
 | `publicado_en` | `timestamptz` | | Fecha de la primera publicación. |
 
-**`producto_medios`**: fotos y videos propios del producto (F2).
+**`producto_medios`**: fotos, videos y modelos 3D propios del producto (F2, F4).
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | `id` | `uuid` | PK | Identificador. |
 | `producto_id` | `uuid` | FK → `productos.id`, NOT NULL, ON DELETE CASCADE | Producto al que pertenece. |
-| `tipo` | `tipo_medio` | NOT NULL | Imagen o video. |
+| `tipo` | `tipo_medio` | NOT NULL | Imagen, video o modelo 3D. |
 | `ruta` | `text` | NOT NULL | Ruta en el bucket público de Storage. |
 | `texto_alt` | `text` | NOT NULL | Descripción para accesibilidad y SEO. |
 | `orden` | `smallint` | NOT NULL, DEFAULT 0 | Orden en la galería. |
@@ -1305,7 +1327,7 @@ stateDiagram-v2
 
 #### Contenido editable
 
-**`paginas`**: páginas armadas con bloques desde el panel. Incluye las fichas de producto enriquecidas, las colecciones, "Detrás de la marca" (F11) y el inicio.
+**`paginas`**: contenido editable de las páginas con estructura fija. Incluye las fichas de producto, las colecciones, "Detrás de la marca" (F11) y el inicio.
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1315,8 +1337,8 @@ stateDiagram-v2
 | `coleccion_id` | `uuid` | FK → `colecciones.id`, UNIQUE; CHECK equivalente para `coleccion` | Colección que presenta. |
 | `slug` | `citext` | UNIQUE, NOT NULL | Ruta de la página. |
 | `titulo` | `text` | NOT NULL | Título y metadato SEO. |
-| `bloques_borrador` | `jsonb` | NOT NULL, DEFAULT `'[]'` | Lista de bloques en edición. Cada bloque es `{ id, tipo, datos }` y se valida con Zod. |
-| `bloques_publicados` | `jsonb` | | Copia que ve el público. `publicar_contenido()` la actualiza y dispara la revalidación de la caché. |
+| `contenido_borrador` | `jsonb` | NOT NULL, DEFAULT `'{}'` | Contenido en edición, con la estructura fija de su tipo de página (por ejemplo, descripción, preguntas frecuentes y medios del visor). Se valida con el esquema Zod de ese tipo. En la fase 2 podrá guardar bloques. |
+| `contenido_publicado` | `jsonb` | | Copia que ve el público. `publicar_contenido()` la actualiza y dispara la revalidación de la caché. |
 | `estado` | `estado_publicacion` | NOT NULL, DEFAULT `borrador` | Estado de la página. |
 | `publicado_en` | `timestamptz` | | Última publicación. |
 | `actualizado_por` | `uuid` | FK → `administradores.user_id` | Última persona que la editó. |
@@ -1387,12 +1409,12 @@ stateDiagram-v2
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | `id` | `uuid` | PK | Identificador. |
-| `user_id` | `uuid` | FK → `auth.users.id`, UNIQUE, ON DELETE SET NULL | Cuenta de Supabase Auth, solo si el cliente verificó su correo con OTP. |
+| `user_id` | `uuid` | FK → `auth.users.id`, UNIQUE, ON DELETE SET NULL | Cuenta de Supabase Auth, solo si el cliente verificó su correo con OTP. Se usa desde la fase 2. |
 | `nombre` | `text` | NOT NULL | Nombre completo. |
 | `email` | `citext` | UNIQUE; CHECK (`email IS NOT NULL OR origen = 'importado'`) | Correo. Puede faltar solo en clientes importados, porque la lista actual no siempre lo tiene. |
 | `telefono` | `text` | CHECK formato E.164 (`+593...`) | Teléfono de WhatsApp. |
 | `ciudad_id` | `uuid` | FK → `ciudades.id` | Ciudad principal. |
-| `origen` | `origen_cliente` | NOT NULL, DEFAULT `web` | `importado` para la lista que ya tiene Gaby. |
+| `origen` | `origen_cliente` | NOT NULL, DEFAULT `web` | `importado` para la lista que ya tiene Gaby (la importación llega en la fase 2). |
 | `segmento` | `segmento_cliente` | NOT NULL, DEFAULT `nuevo` | Se recalcula cada noche con `pg_cron`: `recurrente` con 2 o más compras, `inactivo` sin compras en 12 meses. |
 | `acepta_marketing` | `boolean` | NOT NULL, DEFAULT false | Consentimiento explícito para recibir promociones (LOPDP). |
 | `acepta_marketing_en` | `timestamptz` | | Fecha del consentimiento, como evidencia. |
@@ -1402,7 +1424,7 @@ stateDiagram-v2
 | `notas` | `text` | | Notas internas de Gaby. |
 | `anonimizado_en` | `timestamptz` | | Si tiene valor, los datos personales fueron borrados a pedido del titular; los pedidos se conservan para la contabilidad. |
 
-**`direcciones`**: direcciones guardadas de clientes con cuenta verificada, para completar el checkout con un clic.
+**`direcciones`** *(fase 2)*: direcciones guardadas de clientes con cuenta verificada, para completar el checkout con un clic.
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1415,7 +1437,7 @@ stateDiagram-v2
 | `referencia` | `text` | NOT NULL | Punto de referencia, más útil en Ecuador que el código postal. |
 | `es_predeterminada` | `boolean` | NOT NULL, DEFAULT false; índice único parcial `(cliente_id) WHERE es_predeterminada` | Dirección que se propone primero. |
 
-**`compras_historicas`**: compras anteriores a la tienda web, importadas de la lista de Gaby. Sirven para identificar clientes recurrentes desde el primer día.
+**`compras_historicas`** *(fase 2)*: compras anteriores a la tienda web, importadas de la lista de Gaby. Sirven para identificar clientes recurrentes desde el primer día.
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1445,9 +1467,9 @@ stateDiagram-v2
 | `fecha_entrega_deseada` | `date` | CHECK ≥ fecha del pedido | Opcional, útil para regalos con fecha. |
 | `notas_cliente` | `text` | CHECK longitud ≤ 500 | Detalles adicionales del pedido. |
 | `datos_facturacion` | `jsonb` | | Tipo y número de identificación, razón social y correo para la factura. `NULL` significa consumidor final, así que no se agregan campos al checkout si el cliente no los necesita. |
-| `cupon_id` | `uuid` | FK → `cupones.id` | Cupón aplicado. |
+| `cupon_id` | `uuid` | FK → `cupones.id` | Cupón aplicado. Se agrega con las promociones de la fase 2. |
 | `subtotal_centavos` | `int` | NOT NULL, CHECK ≥ 0 | Suma de las líneas. |
-| `descuento_centavos` | `int` | NOT NULL, DEFAULT 0, CHECK ≥ 0 | Descuento del cupón. |
+| `descuento_centavos` | `int` | NOT NULL, DEFAULT 0, CHECK ≥ 0 | Descuento del cupón. Siempre 0 en el MVP. |
 | `envio_centavos` | `int` | NOT NULL, DEFAULT 0, CHECK ≥ 0 | Costo de envío según la zona; 0 si es retiro. |
 | `base_imponible_centavos`, `iva_centavos` | `int` | NOT NULL, CHECK ≥ 0; CHECK (`base_imponible_centavos + iva_centavos = total_centavos`) | Desglose tributario que se envía a Payphone (`amountWithTax` y `tax`). |
 | `tasa_iva` | `numeric(5,2)` | NOT NULL | Copia de la tasa aplicada en el momento de la compra. |
@@ -1573,10 +1595,10 @@ Restricciones de coherencia por tipo (CHECK):
 
 #### Resumen de acceso por tabla (RLS)
 
-| Tablas | Visitante (sin sesión) | Cliente con cuenta | Administradora (con MFA) |
+| Tablas | Visitante (sin sesión) | Cliente con cuenta (fase 2) | Administradora (con MFA) |
 |---|---|---|---|
 | `categorias`, `productos`, `producto_medios`, `modelos_base`, `opciones_personalizacion`, `valores_opcion`, `colecciones`, `coleccion_productos`, `ocasiones`, `producto_ocasiones`, `tipos_caja`, `disenos_caja`, `disenos_tarjeta`, `zonas_envio`, `ciudades` | Lectura de lo publicado o activo | Lectura de lo publicado o activo | Lectura y escritura |
-| `paginas` | Lectura de `bloques_publicados` | Igual que el visitante | Lectura y escritura, incluido el borrador |
+| `paginas` | Lectura de `contenido_publicado` | Igual que el visitante | Lectura y escritura, incluido el borrador |
 | `configuracion_tienda` | Lectura de los campos públicos, mediante una vista | Igual que el visitante | Lectura y escritura |
 | `clientes`, `direcciones` | Sin acceso | Lectura y escritura de su propio registro | Lectura y escritura |
 | `pedidos`, `pedido_items`, `pedido_item_opciones`, `pagos` | Sin acceso directo; se crean y consultan solo con funciones seguras (`crear_pedido()`, consulta por `token_publico`) | Lectura de sus propios pedidos | Lectura y cambio de estado |
@@ -1631,8 +1653,6 @@ info:
 servers:
   - url: https://quindeblue.com
     description: Producción (dominio de ejemplo)
-  - url: https://staging.quindeblue.com
-    description: Staging (Payphone en modo de pruebas)
   - url: http://localhost:4321
     description: Desarrollo local
 tags:
@@ -1649,7 +1669,7 @@ paths:
       summary: Crea un pedido a partir del carrito y los datos de entrega
       description: >
         Valida el cuerpo con Zod y llama a la función `crear_pedido()` de la base de datos. Esa
-        función recalcula precios, recargos, cupón, envío e IVA; valida stock, capacidad y mínimo
+        función recalcula precios, recargos, envío e IVA; valida stock, capacidad y mínimo
         de piezas de cada caja; registra o actualiza al cliente en el CRM, y crea el pedido en
         estado `pendiente_pago`. Según el método de pago, responde con los parámetros para la
         Cajita de Payphone o con los datos bancarios para transferir.
@@ -1713,9 +1733,8 @@ paths:
                       referencia: Edificio blanco junto a la farmacia, piso 3
                     fecha_entrega_deseada: "2026-12-18"
                   metodo_pago: payphone
-                  cupon: BIENVENIDA10
                   facturacion: null
-                  total_mostrado_centavos: 4865
+                  total_mostrado_centavos: 5350
                   turnstile_token: 0.AbCdEfGhIjKlMnOpQrStUvWxYz
       responses:
         '201':
@@ -1739,20 +1758,20 @@ paths:
                     expira_en: "2026-12-10T15:42:00-05:00"
                     totales:
                       subtotal_centavos: 4850
-                      descuento_centavos: 485
+                      descuento_centavos: 0
                       envio_centavos: 500
-                      base_imponible_centavos: 4230
-                      iva_centavos: 635
+                      base_imponible_centavos: 4652
+                      iva_centavos: 698
                       tasa_iva: 15
-                      total_centavos: 4865
+                      total_centavos: 5350
                     pago:
                       metodo: payphone
                       payphone:
                         clientTransactionId: QB-2026-000123
-                        amount: 4865
-                        amountWithTax: 4230
+                        amount: 5350
+                        amountWithTax: 4652
                         amountWithoutTax: 0
-                        tax: 635
+                        tax: 698
                         currency: USD
                         reference: Pedido QB-2026-000123 · Quinde Blue
         '400':
@@ -1780,8 +1799,8 @@ paths:
                 mensaje: El total de tu pedido cambió. Revisa el nuevo total antes de pagar.
                 detalles:
                   - campo: total_mostrado_centavos
-                    valor_esperado: 4865
-                    valor_actual: 5115
+                    valor_esperado: 5350
+                    valor_actual: 5600
         '422':
           description: Una regla de negocio impide el pedido.
           content:
@@ -1837,7 +1856,7 @@ paths:
                     estado_pedido: pagado
                     token_publico: 2b9f6c1e-8d4a-4f7e-9c3b-5a1d7e9f2c4b
                     pago:
-                      monto_centavos: 4865
+                      monto_centavos: 5350
                       marca_tarjeta: Visa
                       ultimos_digitos: "4242"
                       codigo_autorizacion: W1234567
@@ -2010,10 +2029,6 @@ components:
         metodo_pago:
           type: string
           enum: [payphone, transferencia]
-        cupon:
-          type: [string, 'null']
-          maxLength: 40
-          description: Código del cupón. No distingue mayúsculas.
         facturacion:
           oneOf:
             - $ref: '#/components/schemas/Facturacion'
@@ -2438,7 +2453,6 @@ components:
             - CAPACIDAD_CAJA_EXCEDIDA
             - MINIMO_PIEZAS_NO_ALCANZADO
             - DEDICATORIA_DEMASIADO_LARGA
-            - CUPON_INVALIDO
             - CIUDAD_SIN_COBERTURA
             - PRECIO_CAMBIADO
             - PEDIDO_NO_ENCONTRADO
@@ -2514,11 +2528,10 @@ components:
   | Cuaderno mini | 900 |
   | Marcapáginas de madera (500 × 2) | 1.000 |
   | **Subtotal** | **4.850** |
-  | Cupón del 10 % | −485 |
   | Envío a la zona Costa | 500 |
-  | **Total** | **4.865** |
+  | **Total** | **5.350** |
 
-  El IVA ya está incluido en los precios: el total se desglosa en 4.230 de base imponible y 635 de IVA al 15 %, que es lo que recibe Payphone. Los montos son ilustrativos.
+  El IVA ya está incluido en los precios: el total se desglosa en 4.652 de base imponible y 698 de IVA al 15 %, que es lo que recibe Payphone. Los montos son ilustrativos. El MVP no acepta cupones: llegan con las promociones de la fase 2.
 - **Orden de validación:** primero el esquema (400), luego Turnstile (403), luego las reglas de negocio en `crear_pedido()` (422) y por último la comparación con `total_mostrado_centavos` (409). El pedido solo se crea si todo pasa, en una sola transacción.
 - **CRM:** si el correo ya existe, el pedido se asocia a ese cliente, pero **la respuesta no revela** si el correo era conocido. Así no se pueden descubrir los correos de los clientes.
 
@@ -2529,6 +2542,15 @@ components:
 **3. `POST /api/pedidos/{token}/comprobante`**
 - El archivo se guarda con un nombre generado (`comprobantes/{pedido_id}/{uuid}.{ext}`), nunca con el nombre original. Gaby lo ve en el panel con un enlace firmado de corta duración.
 - Al recibirlo, se envía un correo a la administradora para que valide la transferencia.
+
+### Otros endpoints del BFF
+
+La plantilla limita la especificación OpenAPI a tres endpoints. Estos dos completan el BFF y se documentan en resumen:
+
+| Endpoint | Uso | Protección | Respuesta |
+|---|---|---|---|
+| `POST /api/revalidar` | Lo llama un webhook de la base de datos (`pg_net`) cuando Gaby publica una ficha, una colección o "Detrás de la marca". Cuerpo: `{ "tipo": "producto", "slug": "cuaderno-kraft" }`. | Cabecera `X-Revalidate-Secret` con el valor de `REVALIDATE_SECRET`. | 204 al invalidar la caché; 401 si el secreto no es válido. |
+| `GET /pedido/{token}` | Página de seguimiento del pedido (SSR), enlazada desde el correo de confirmación. Llama a la función `consultar_pedido(p_token)` con la clave secreta. | El `token_publico` no se puede adivinar. La página muestra solo el código, el estado, el resumen y la entrega, sin el correo ni el teléfono completos. Tiene límite de solicitudes por IP. | HTML; la página "Pedido no encontrado" (404) si el token no existe. |
 
 ---
 
@@ -2554,7 +2576,7 @@ Las tres historias cubren el núcleo del MVP: armar una caja de regalo (la funci
 - [ ] Hay tests unitarios del motor de precios y de los esquemas, tests de base de datos y RLS con pgTAP, y un test E2E del recorrido principal con Playwright, según la sección 2.6.
 - [ ] Funciona en móvil (375 px) y en escritorio, y se puede usar con teclado y lector de pantalla (WCAG 2.1 AA).
 - [ ] Pasa la CI (lint, tipos, tests, Lighthouse) y tiene el pull request revisado.
-- [ ] Está desplegada en staging y validada por Gaby.
+- [ ] Gaby la validó en una demo antes de publicarla.
 
 ---
 
@@ -2651,7 +2673,7 @@ Escenario: Una pieza se agota mientras armo la caja
 |---|---|
 | Funcionalidades | F5 · Carrito y pago en línea · F6 · Envío o retiro · F7 · Chat posterior a la compra |
 | Prioridad | **Must** (es el objetivo principal del producto) |
-| Estimación | 13 puntos. Se divide en **2a** Contacto y entrega (5), **2b** Pago con Payphone (5) y **2c** Pago por transferencia (3). |
+| Estimación | 13 puntos. Se divide en **2a** Contacto y entrega (5), **2b** Pago por transferencia (3) y **2c** Pago con Payphone (5), que se implementan en ese orden porque la transferencia concentra cerca del 90 % de los pagos actuales. |
 | Dependencias | Los tres endpoints de la sección 4 · tablas `pedidos`, `pagos`, `clientes`, `ciudades` y `zonas_envio` · Cloudflare Turnstile · SMTP |
 
 **Contexto:** hoy el 90 % de los pagos son por transferencia y todo se coordina por chat, con compras que tardan hasta semanas. La entrevista dejó claro que el cliente desconfía de comprar solo con clics: el contacto humano se mantiene, pero después del pago (F7).
@@ -2691,18 +2713,29 @@ Escenario: Corregir errores sin perder lo escrito
   Entonces el teléfono se normaliza a +593991234567 o veo un error en español junto al campo
   Y nada de lo que ya escribí se borra
 
-Escenario: Cliente recurrente
-  Dado que ya compré antes con mi correo
-  Cuando pulso "¿Ya compraste? Recibe un código" e ingreso el código que llegó a mi correo
-  Entonces puedo elegir una de mis direcciones guardadas
-  Y si no verifico el código, la tienda no revela ningún dato asociado a mi correo
-
 Escenario: El total cambió antes de pagar
   Dado que el precio de un producto cambió mientras estaba en el checkout
   Cuando pulso "Pagar"
   Entonces veo el nuevo total y debo confirmarlo antes de continuar
 
-# 2b · Pago con Payphone
+# 2b · Pago por transferencia
+Escenario: Pagar por transferencia y subir el comprobante después
+  Dado que elegí pagar por transferencia
+  Cuando confirmo el pedido
+  Entonces veo los datos bancarios, el total y un plazo de 48 horas para subir el comprobante
+  Y puedo subirlo en ese momento o más tarde desde el enlace de mi correo
+  Y al subirlo, mi pedido pasa a "Pago en revisión"
+
+Escenario: Comprobante aprobado o rechazado
+  Dado que subí el comprobante de mi transferencia
+  Cuando Gaby lo revisa
+  Entonces recibo un correo que confirma el pago, o que explica el motivo del rechazo con un enlace para subir otro
+
+Escenario: No crear pedidos duplicados
+  Cuando pulso "Confirmar pedido" dos veces seguidas o se reintenta por un problema de red
+  Entonces se crea un solo pedido
+
+# 2c · Pago con Payphone
 Escenario: Pago con tarjeta aprobado
   Dado que elegí pagar con tarjeta y completé el checkout
   Cuando pulso "Pagar" y pago en la Cajita de Payphone sin salir de la tienda
@@ -2713,27 +2746,14 @@ Escenario: Pago cancelado o vencido
   Dado que cancelé el pago en la Cajita o venció el plazo de confirmación
   Entonces veo "Tu pago no se completó y no se realizó ningún cobro"
   Y puedo volver a intentarlo sin llenar el formulario de nuevo
-
-Escenario: No crear pedidos duplicados
-  Cuando pulso "Pagar" dos veces seguidas o se reintenta por un problema de red
-  Entonces se crea un solo pedido
-
-# 2c · Pago por transferencia
-Escenario: Pagar por transferencia y subir el comprobante después
-  Dado que elegí pagar por transferencia
-  Cuando confirmo el pedido
-  Entonces veo los datos bancarios, el total y un plazo de 48 horas para subir el comprobante
-  Y puedo subirlo en ese momento o más tarde desde el enlace de mi correo
-  Y al subirlo, mi pedido pasa a "Pago en revisión"
 ```
 
 **Reglas de negocio:**
 - Los datos de facturación son opcionales y van en un bloque colapsado. Por defecto, la factura se emite como consumidor final.
-- El cupón es un campo opcional y colapsado; no interrumpe el flujo.
 - La casilla para recibir promociones viene desmarcada (LOPDP).
 - La Cajita de Payphone se muestra dentro de la página. La confirmación se hace siempre en el servidor (sección 4, endpoint 2).
 
-**Fuera de alcance:** cuentas con contraseña, cálculo de envío con la API de Servientrega (se usan tarifas por zona) y pagos en cuotas.
+**Fuera de alcance:** cuentas con contraseña; código por correo y direcciones guardadas para clientes recurrentes (fase 2); cupones (fase 2); cálculo de envío con la API de Servientrega (se usan tarifas por zona) y pagos en cuotas.
 
 **Métrica de éxito:** al menos el 60 % de quienes inician el checkout completan el pago, la mediana de tiempo en el checkout es menor a 3 minutos y baja el número de chats previos a la compra.
 
@@ -2742,17 +2762,17 @@ Escenario: Pagar por transferencia y subir el comprobante después
 ### Historia de Usuario 3 — Publicar una página de producto desde el panel
 
 > **Como** Gaby, dueña de Quinde Blue,
-> **quiero** crear y publicar la página de un producto desde el panel, armándola con bloques y viéndola antes de publicarla,
+> **quiero** crear y publicar la ficha de un producto desde el panel, completando un formulario y viéndola antes de publicarla,
 > **para** mantener el catálogo al día sin depender de un programador ni redesplegar el sitio.
 
 | Campo | Valor |
 |---|---|
 | Funcionalidades | F2 · Ficha de producto · F3 · Personalizador · F4 · Exploración interactiva · F10 · Panel de administración |
 | Prioridad | **Must** (sin esto, la tienda depende de un desarrollador) |
-| Estimación | 8 puntos |
-| Dependencias | Tablas `productos`, `producto_medios`, `modelos_base`, `opciones_personalizacion`, `valores_opcion` y `paginas` · función `publicar_contenido()` · `/api/revalidar` · Supabase Storage · catálogo de bloques de `packages/shared` |
+| Estimación | 5 puntos |
+| Dependencias | Tablas `productos`, `producto_medios`, `modelos_base`, `opciones_personalizacion`, `valores_opcion` y `paginas` · función `publicar_contenido()` · `/api/revalidar` · Supabase Storage · esquemas de contenido de `packages/shared` |
 
-**Contexto:** Gaby ya tiene fotos y videos propios de todos sus productos, y quiere un catálogo curado de unos 20 productos. El benchmark de fichas de producto de marcas artesanales (20 de octubre de 2026) mostró tres oportunidades: solo 1 de 10 marcas tiene una barra de compra fija en el celular, ninguna permite hojear el interior del producto y la línea con el plazo de elaboración junto al precio da confianza.
+**Contexto:** Gaby ya tiene fotos y videos propios de todos sus productos, y quiere un catálogo curado de unos 20 productos. En el MVP, la ficha tiene una **estructura fija**: el orden y el diseño de las secciones están definidos, y Gaby edita su contenido desde un formulario. El editor por bloques, que permitirá reordenar y agregar secciones, queda para la fase 2. Así se decidió tras la revisión de la Entrega 1, porque una ficha fija bien diseñada da casi todo el valor con mucho menos desarrollo. El benchmark de fichas de producto de marcas artesanales (20 de octubre de 2026) orientó la plantilla: solo 1 de 10 marcas tiene una barra de compra fija en el celular, ninguna permite hojear el interior del producto y la línea con el plazo de elaboración junto al precio da confianza.
 
 **Criterios de aceptación:**
 
@@ -2768,17 +2788,22 @@ Escenario: Subir y ordenar fotos y videos
   Entonces se suben, puedo ordenarlos arrastrándolos y marcar una foto como portada
   Y cada medio exige un texto alternativo antes de publicar
 
+Escenario: Configurar el visor 3D
+  Cuando subo el modelo 3D del producto en formato GLB, de hasta 15 MB
+  Entonces la vista previa lo muestra en el visor, donde se puede girar y acercar
+  Y si no subo un modelo, el visor usa la secuencia de fotos que elija
+
 Escenario: Configurar la personalización
   Dado que marqué el producto como personalizable
   Cuando agrego modelos base y opciones como "Color de portada", "Nombre" o "Tipo de hojas"
   Entonces puedo definir los valores y el recargo de cada uno
   Y el panel no me deja tener más de 10 modelos base activos
 
-Escenario: Armar la página con bloques
-  Dado que abro el editor de la página del producto
-  Entonces veo una plantilla inicial con bloques en un orden recomendado:
+Escenario: Completar la ficha con estructura fija
+  Dado que abro la pestaña "Ficha" del producto
+  Entonces veo un formulario con las secciones de la plantilla, en orden fijo:
     portada con precio y plazo de elaboración, galería, visor interactivo, descripción, preguntas frecuentes y botón "Personalizar"
-  Y puedo agregar, editar, reordenar arrastrando o eliminar bloques del catálogo disponible
+  Y puedo escribir los textos, agregar preguntas frecuentes y elegir qué medios van en la galería y en el visor
   Y los cambios se guardan solos como borrador sin afectar lo publicado
 
 Escenario: Ver la página antes de publicarla
@@ -2799,7 +2824,7 @@ Escenario: Publicar sin redesplegar
 
 Escenario: Editar un producto ya publicado
   Dado que el producto está publicado
-  Cuando cambio la descripción en el editor
+  Cuando cambio la descripción en el formulario
   Entonces la tienda sigue mostrando la versión publicada
   Y puedo elegir "Publicar cambios" o "Descartar cambios"
 
@@ -2816,12 +2841,12 @@ Escenario: Habilitar el producto para cajas de regalo
 
 **Reglas de negocio:**
 - Solo una persona con rol de administradora y MFA activo puede crear, editar o publicar (RLS, sección 2.5).
-- Los bloques disponibles son predefinidos: portada, galería, texto, visor interactivo, preguntas frecuentes, botón "Personalizar" y testimonios. Cada uno se valida con su esquema Zod.
+- Las secciones de la ficha son fijas en orden y diseño: Gaby edita su contenido, no su estructura. Cada sección se valida con su esquema Zod.
 - Las imágenes se optimizan automáticamente al servirlas; Gaby no necesita redimensionarlas.
 
-**Fuera de alcance:** cambiar colores y tipografías desde el panel, visor 3D, programar la publicación para una fecha (llega con los lanzamientos, fase 2) e historial de versiones.
+**Fuera de alcance:** editor por bloques para reordenar o agregar secciones (fase 2), cambiar colores y tipografías desde el panel, programar la publicación para una fecha (llega con los lanzamientos, fase 2), historial de versiones y realidad aumentada en el visor.
 
-**Métrica de éxito:** en una prueba de usabilidad, Gaby publica un producto completo (fotos, personalización y página) en menos de 15 minutos y sin ayuda.
+**Métrica de éxito:** en una prueba de usabilidad, Gaby publica un producto completo (fotos, personalización y ficha) en menos de 15 minutos y sin ayuda.
 
 ---
 
@@ -2832,7 +2857,7 @@ Los tres tickets salen de las historias de la sección 5 y siguen el orden en qu
 | Ticket | Tipo | Historia | Qué entrega |
 |---|---|---|---|
 | **QB-12** | Base de datos | HU1 · HU2a | Tablas de pedidos y la función `crear_pedido()`, que valida y calcula todo el pedido. |
-| **QB-21** | Backend | HU2b | Endpoint de confirmación de pagos con Payphone. |
+| **QB-21** | Backend | HU2b | Carga del comprobante de transferencia y funciones para registrarlo y revisarlo. |
 | **QB-34** | Frontend | HU1 | Isla interactiva "Crea tu propia caja". |
 
 **Convenciones de los tickets:**
@@ -2849,7 +2874,7 @@ Los tres tickets salen de las historias de la sección 5 y siguen el orden en qu
 |---|---|
 | Tipo | Base de datos |
 | Historias | HU1 · Armar una caja de regalo · HU2a · Contacto y entrega |
-| Prioridad | Crítica: sin esta función no se pueden crear pedidos (`POST /api/pedidos`) ni confirmar pagos (QB-21) |
+| Prioridad | Crítica: sin esta función no se pueden crear pedidos (`POST /api/pedidos`) ni registrar comprobantes (QB-21) |
 | Estimación | 5 puntos (unas 12 horas) |
 | Rama | `feat/QB-12-crear-pedido` |
 | Etiquetas | `database`, `supabase`, `pedidos`, `seguridad` |
@@ -2862,7 +2887,7 @@ Los tres tickets salen de las historias de la sección 5 y siguen el orden en qu
 | Incluye | No incluye |
 |---|---|
 | Tipos `estado_pedido`, `metodo_entrega`, `metodo_pago`, `tipo_item` y `estado_pago` | Validación de cupones: llega con la función `aplicar_cupon()`, junto con las promociones de la fase 2 |
-| Tablas `pedidos`, `pedido_items`, `pedido_item_opciones` y `pagos`, con sus restricciones e índices (sección 3.2) | La función `registrar_pago()`, que registra el resultado de un pago y se desarrolla aparte |
+| Tablas `pedidos`, `pedido_items`, `pedido_item_opciones` y `pagos`, con sus restricciones e índices (sección 3.2) | Las funciones de pago: `registrar_comprobante()` y `revisar_comprobante()` (QB-21), y `registrar_pago()` (iteración de Payphone) |
 | Secuencia para el código legible del pedido | La tarea programada (`pg_cron`) que expira los pedidos vencidos y devuelve su stock |
 | Función `crear_pedido()` con validaciones, cálculo de totales e IVA, y reserva de stock | El endpoint HTTP `POST /api/pedidos` que llama a esta función |
 | Políticas RLS de las cuatro tablas | |
@@ -2874,6 +2899,8 @@ Los tres tickets salen de las historias de la sección 5 y siguen el orden en qu
 supabase/migrations/20261103120000_pedidos_tablas.sql       # tipos, tablas, índices, secuencia, RLS
 supabase/migrations/20261103120100_fn_crear_pedido.sql      # función crear_pedido() y permisos
 supabase/tests/pedidos/crear_pedido.test.sql                # tests pgTAP
+packages/shared/fixtures/casos-precio.json                  # casos de precio compartidos (se escriben primero)
+supabase/tests/fixtures/casos_precio.sql                    # generado desde el JSON con npm run fixtures:sql
 supabase/seed.sql                                            # agregar 1 caja, 3 piezas y 2 ciudades de prueba
 packages/shared/src/database.types.ts                        # regenerado con supabase gen types
 ```
@@ -2898,7 +2925,7 @@ packages/shared/src/database.types.ts                        # regenerado con su
    4. **Productos sueltos:** el producto debe estar publicado y tener stock (o ser bajo pedido). El modelo base debe pertenecer al producto y estar activo; es obligatorio si el producto es personalizable. Cada opción debe ser del producto, las obligatorias deben estar presentes y los textos no pueden superar `max_caracteres`. Precio de la línea = precio base + recargos de modelo, opciones y valores.
    5. **Cajas:** el tipo de caja, el diseño y la tarjeta deben estar activos. Cada pieza debe tener `habilitado_caja = true`, con las mismas validaciones del paso 4. La suma de `espacios_caja × cantidad` no puede superar `capacidad_espacios`, el número de piezas debe llegar a `min_piezas` y la dedicatoria no puede superar el `max_caracteres` de la tarjeta.
    6. **Envío:** si es envío, la ciudad debe estar activa y su zona define el costo. Si es retiro, el costo es 0.
-   7. **Totales:** subtotal, descuento (0 hasta que existan los cupones), envío y total. Si los precios incluyen IVA: `base = round(total / (1 + tasa / 100))` e `iva = total − base`.
+   7. **Totales:** subtotal, descuento (siempre 0 en el MVP; los cupones llegan en la fase 2), envío y total. Si los precios incluyen IVA: `base = round(total / (1 + tasa / 100))` e `iva = total − base`.
    8. **Precio cambiado:** si viene `total_mostrado_centavos` y no coincide con el total calculado, cancelar con `PRECIO_CAMBIADO`, indicando ambos valores.
    9. **Stock:** bloquear las filas con `select … for update` y descontar el stock de los productos que lo controlan.
    10. **Insertar:** crear el pedido con el código `'QB-' || año || '-' || lpad(nextval('pedido_codigo_seq')::text, 6, '0')` y `expira_en` según el método de pago. Luego las líneas (las piezas enlazadas a su caja con `item_padre_id`) y las opciones, todo con copias de nombres y precios.
@@ -2912,7 +2939,8 @@ packages/shared/src/database.types.ts                        # regenerado con su
    - Administradora (`es_admin()`): lectura y actualización del estado. No se permite borrar.
 
 **Criterios de aceptación:**
-- [ ] Las migraciones se aplican sin errores sobre una base vacía (`supabase db reset`) y sobre la de staging.
+- [ ] Las migraciones se aplican sin errores sobre una base vacía (`supabase db reset`) y en la CI.
+- [ ] Todos los casos de `casos-precio.json` pasan, incluido el redondeo del IVA.
 - [ ] Un pedido válido con un producto suelto y una caja de 3 piezas devuelve los totales correctos, incluido el desglose de IVA.
 - [ ] Repetir la llamada con la misma `p_idempotency_key` devuelve el mismo pedido y no descuenta stock dos veces.
 - [ ] Cada regla del paso 5 rechaza el pedido con su código de error y no deja filas a medias.
@@ -2936,102 +2964,98 @@ packages/shared/src/database.types.ts                        # regenerado con su
 | 10 | Precio incluido en el payload | Se ignora; se cobra el precio de la base de datos |
 | 11 | Ejecución como `anon` o `authenticated` | Permiso denegado |
 | 12 | Cliente con cuenta lee pedidos de otro cliente | 0 filas |
+| 13 | Cada caso de `casos-precio.json` | Los totales coinciden con los esperados, incluido el redondeo del IVA |
 
-**Notas:** documentar en el pull request el plan de reversión de la migración. Las tablas son nuevas, así que se pueden eliminar sin afectar datos existentes.
+**Notas:** se trabaja con tests primero: los casos de precio y los tests pgTAP se escriben antes que la función. Documentar en el pull request el plan de reversión de la migración. Las tablas son nuevas, así que se pueden eliminar sin afectar datos existentes.
 
 ---
 
-### Ticket 2 — QB-21 · Endpoint de confirmación de pagos con Payphone
+### Ticket 2 — QB-21 · Carga y revisión del comprobante de transferencia
 
 | Campo | Valor |
 |---|---|
 | Tipo | Backend |
-| Historia | HU2b · Pago con Payphone |
-| Prioridad | Crítica: sin esto no se puede cobrar con tarjeta |
+| Historia | HU2b · Pago por transferencia |
+| Prioridad | Crítica: es el primer método de pago que se implementa, porque concentra cerca del 90 % de los pagos actuales |
 | Estimación | 3 puntos (unas 8 horas) |
-| Rama | `feat/QB-21-confirmar-payphone` |
-| Etiquetas | `backend`, `pagos`, `payphone`, `seguridad` |
-| Depende de | QB-12 (tablas de pedidos) · función `registrar_pago()`, que valida el estado, el monto y la idempotencia antes de marcar el pedido como pagado · credenciales de Payphone en modo de pruebas |
+| Rama | `feat/QB-21-comprobante-transferencia` |
+| Etiquetas | `backend`, `pagos`, `storage`, `seguridad` |
+| Depende de | QB-12 (tablas `pedidos` y `pagos`) · bucket privado `comprobantes` en Supabase Storage |
 
-**Objetivo:** implementar `POST /api/pagos/payphone/confirmar` según la sección 4. El endpoint confirma la transacción con Payphone dentro de los 5 minutos que exige el proveedor, registra el resultado con `registrar_pago()` y devuelve lo que la página `/pago/respuesta` necesita para mostrar la confirmación.
+**Objetivo:** implementar `POST /api/pedidos/{token}/comprobante` según la sección 4, y las dos funciones de base de datos que registran el comprobante y permiten a Gaby aprobarlo o rechazarlo. Con este ticket, el pago por transferencia queda completo de principio a fin antes de integrar Payphone, y la pieza que protege el dinero en el MVP (la aprobación del pago) tiene ticket propio.
 
 **Alcance:**
 
 | Incluye | No incluye |
 |---|---|
-| Endpoint con validación Zod, límite de solicitudes y manejo de errores | La página `/pago/respuesta`, que muestra el resultado al comprador (trabajo de frontend) |
-| Cliente de Payphone con tiempo de espera y tipos | La función `registrar_pago()` (trabajo de base de datos) |
-| Correo de confirmación al comprador | La plantilla visual del correo con la identidad de la marca; aquí se usa una versión simple en texto |
-| Tests de integración con Payphone simulado | |
+| Endpoint `multipart/form-data` con validación del tipo real y del tamaño, límite de solicitudes y manejo de errores | La pantalla del panel para revisar comprobantes (trabajo de frontend del panel) |
+| Funciones `registrar_comprobante()` y `revisar_comprobante()`, con sus tests pgTAP | La confirmación de pagos con Payphone y la función `registrar_pago()`: siguiente iteración, con su contrato definido en las secciones 2.5 y 4 |
+| Políticas del bucket privado `comprobantes` | La plantilla visual de los correos; aquí se usa una versión simple en texto |
+| Correo a la administradora al recibir un comprobante, y al comprador cuando se aprueba o se rechaza | |
+| Tests de integración del endpoint | |
 
 **Archivos:**
 
 ```
-apps/tienda/src/pages/api/pagos/payphone/confirmar.ts   # endpoint
-apps/tienda/src/lib/payphone.ts                         # cliente de la API de confirmación
-apps/tienda/src/lib/errores.ts                          # traducción de errores de la base de datos a respuestas HTTP
-apps/tienda/src/lib/correo.ts                           # envío por SMTP (Nodemailer)
-packages/shared/src/schemas/pagos.ts                    # ConfirmarPagoRequest y ConfirmacionPago (Zod)
-apps/tienda/tests/api/confirmar-payphone.test.ts        # tests de integración
+apps/tienda/src/pages/api/pedidos/[token]/comprobante.ts   # endpoint
+apps/tienda/src/lib/archivos.ts                            # tipo real por firma del archivo y nombres generados
+apps/tienda/src/lib/errores.ts                             # traducción de errores de la base de datos a respuestas HTTP
+apps/tienda/src/lib/correo.ts                              # envío por SMTP (Nodemailer)
+supabase/migrations/20261105120000_fn_comprobantes.sql     # registrar_comprobante(), revisar_comprobante() y políticas del bucket
+supabase/tests/pagos/comprobantes.test.sql                 # tests pgTAP
+packages/shared/src/schemas/pagos.ts                       # ComprobanteRecibido (Zod)
+apps/tienda/tests/api/comprobante.test.ts                  # tests de integración
 ```
 
 **Detalle técnico:**
 
-1. **Validar** el cuerpo con `ConfirmarPagoRequest`: `id` entero y `clientTransactionId` de hasta 50 caracteres. Si no es válido, responder 400 `VALIDACION`.
-2. **Limitar solicitudes:** como máximo 10 por minuto por IP; al superarlo, 429 con `Retry-After`.
-3. **Buscar el pedido** por `codigo = clientTransactionId` con el cliente de servidor de Supabase. Si no existe, 404 `PEDIDO_NO_ENCONTRADO`.
-4. **Atajo idempotente:** si el pedido ya está `pagado` con un pago aprobado de ese mismo `payphone_transaction_id`, devolver 200 `aprobado` **sin volver a llamar a Payphone**.
-5. **Confirmar con Payphone:**
-   ```ts
-   // lib/payphone.ts
-   export async function confirmarTransaccion(id: number, clientTxId: string): Promise<RespuestaPayphone> {
-     const res = await fetch(`${PAYPHONE_API}/api/confirm`, {
-       method: "POST",
-       headers: { Authorization: `Bearer ${env.PAYPHONE_TOKEN}`, "Content-Type": "application/json" },
-       body: JSON.stringify({ id, clientTxId }),
-       signal: AbortSignal.timeout(8000),
-     });
-     // ...
-   }
-   ```
-6. **Interpretar la respuesta:**
+1. **Validar** que `token` sea un UUID. Limitar a 5 subidas por hora por pedido y 20 por hora por IP; al superarlo, 429 con `Retry-After`.
+2. **Leer el archivo por partes,** con un límite de 5 MB: si lo supera, se corta la lectura y se responde 413, sin cargar el archivo completo en memoria.
+3. **Comprobar el tipo real** por la firma de los primeros bytes, no por la extensión ni por el `Content-Type`: JPEG (`FF D8 FF`), PNG (`89 50 4E 47`) o PDF (`%PDF`). Cualquier otro, 415.
+4. **Comprobar el pedido** por `token_publico`: si no existe, 404. Si se paga con Payphone, ya tiene un comprobante en revisión, ya está pagado o expiró, 409 `ESTADO_PEDIDO_INVALIDO`.
+5. **Subir el archivo** al bucket privado como `comprobantes/{pedido_id}/{uuid}.{ext}`, con un nombre generado, nunca el original.
+6. **Registrar** con `registrar_comprobante(p_token uuid, p_ruta text)`, que en una sola transacción:
+   - vuelve a comprobar el estado del pedido con `select … for update`;
+   - crea un pago `en_revision` por el total del pedido;
+   - pasa el pedido a `pago_en_revision`.
 
-   | Respuesta de Payphone | Acción | Respuesta del endpoint |
-   |---|---|---|
-   | `statusCode` 3 (aprobado) | `registrar_pago()` → pedido `pagado` | 200 `aprobado` |
-   | `statusCode` 3, pero `registrar_pago()` detecta un monto distinto | Pago registrado como `rechazado`, correo de alerta a la administradora | 409 `MONTO_NO_COINCIDE` |
-   | `statusCode` 2 (cancelado) | Pago registrado como `cancelado`; el pedido sigue pendiente | 200 `cancelado` |
-   | Error de Payphone por transacción vencida o revertida | Pago registrado como `revertido` | 410 `PAGO_EXPIRADO` |
-   | Tiempo de espera agotado, error de red o 5xx | No se registra nada | 502 `PROVEEDOR_NO_DISPONIBLE` (la página reintenta) |
-
-7. **Después de aprobar:** enviar el correo de confirmación con el enlace `/pedido/{token_publico}` sin bloquear la respuesta. Un fallo del correo se registra en el log, pero no cambia la respuesta. Armar `whatsapp_url` con el número de `configuracion_tienda` y un mensaje que incluya el código del pedido.
-8. **Registro (logs):** guardar `codigo`, `payphone_transaction_id`, `statusCode` y duración. **Nunca** registrar el token de Payphone ni la respuesta completa en los logs del servidor; la respuesta completa queda solo en `pagos.respuesta_proveedor`.
-
-**Variables de entorno:** `PAYPHONE_TOKEN`, `PAYPHONE_API` (URL base, distinta en pruebas y producción), `SUPABASE_SERVICE_ROLE_KEY`, `SMTP_*`. Se agregan a `.env.example` sin valores reales.
+   Si la función falla, el endpoint elimina el archivo subido para no dejar archivos huérfanos.
+7. **Revisar** con `revisar_comprobante(p_pago_id uuid, p_aprobado boolean, p_motivo text)`, que solo puede ejecutar la administradora con MFA (`es_admin()`):
+   - **Aprobado:** el pago pasa a `aprobado` con `revisado_por` y `revisado_en`, y el pedido pasa a `pagado` con `pagado_en`. El trigger del CRM actualiza los totales del cliente.
+   - **Rechazado:** exige un motivo. El pago pasa a `rechazado` y el pedido vuelve a `pendiente_pago`, con `expira_en` extendido según `horas_expiracion_transferencia`, para que el comprador pueda subir otro comprobante sin perder su pedido.
+   - El índice único parcial de `pagos` impide que un pedido tenga dos pagos aprobados.
+8. **Correos,** sin bloquear la respuesta: a la administradora, con el enlace al pedido en el panel; al comprador, cuando se aprueba o se rechaza (el rechazo incluye el motivo y el enlace para subir otro comprobante).
+9. **Registro (logs):** código del pedido, tipo y tamaño del archivo. Nunca el contenido ni el nombre original.
 
 **Criterios de aceptación:**
-- [ ] Un pago aprobado en el modo de pruebas de Payphone deja el pedido en `pagado`, crea un pago `aprobado` con marca, últimos cuatro dígitos y código de autorización, y envía el correo.
-- [ ] Llamar dos veces al endpoint con los mismos datos devuelve el mismo resultado, crea un solo registro de pago y hace una sola llamada a Payphone.
-- [ ] Un monto distinto al del pedido nunca marca el pedido como pagado.
-- [ ] Si Payphone no responde en 8 segundos, el endpoint responde 502 en menos de 10 segundos.
-- [ ] Los errores siguen el formato `{ codigo, mensaje, detalles }` y los mensajes están en español.
-- [ ] El token de Payphone no aparece en ningún log, respuesta ni archivo del repositorio.
+- [ ] Un comprobante válido deja el pago en `en_revision` y el pedido en `pago_en_revision`, y el archivo queda en el bucket privado con un nombre generado.
+- [ ] Un archivo con extensión `.pdf` que no es un PDF se rechaza con 415.
+- [ ] Un archivo de más de 5 MB se corta sin cargarse completo y responde 413.
+- [ ] Con un comprobante en revisión, un segundo intento responde 409. Después de un rechazo, se puede subir otro.
+- [ ] Solo la administradora con MFA puede aprobar o rechazar, y un pedido nunca queda con dos pagos aprobados.
+- [ ] Si falla el registro en la base de datos, el archivo subido se elimina.
+- [ ] El bucket `comprobantes` no es accesible públicamente ni con la clave pública.
 
-**Tests de integración (Vitest + MSW para simular Payphone):**
+**Tests:**
 
-| # | Caso | Resultado esperado |
-|---|---|---|
-| 1 | Payphone aprueba | 200 `aprobado`, pedido `pagado`, correo enviado |
-| 2 | Payphone cancela | 200 `cancelado`, pedido `pendiente_pago` |
-| 3 | Monto distinto al del pedido | 409 `MONTO_NO_COINCIDE`, alerta a la administradora |
-| 4 | Payphone tarda más de 8 s | 502 `PROVEEDOR_NO_DISPONIBLE`, sin registros |
-| 5 | Segunda llamada tras un pago aprobado | 200 `aprobado`, sin llamar a Payphone |
-| 6 | Código de pedido inexistente | 404 `PEDIDO_NO_ENCONTRADO` |
-| 7 | Cuerpo inválido | 400 `VALIDACION` |
-| 8 | 11 solicitudes en un minuto desde la misma IP | La undécima recibe 429 |
-| 9 | Falla el envío del correo | 200 `aprobado` igualmente; el error queda en el log |
+| Tipo | # | Caso | Resultado esperado |
+|---|---|---|---|
+| Integración (Vitest) | 1 | Foto JPG válida | 201, pedido en `pago_en_revision` |
+| | 2 | PDF válido | 201 |
+| | 3 | Archivo de otro tipo, aunque tenga extensión permitida | 415 `TIPO_ARCHIVO_INVALIDO` |
+| | 4 | Archivo de más de 5 MB | 413 `ARCHIVO_DEMASIADO_GRANDE` |
+| | 5 | Token inexistente | 404 `PEDIDO_NO_ENCONTRADO` |
+| | 6 | Pedido que se paga con Payphone | 409 `ESTADO_PEDIDO_INVALIDO` |
+| | 7 | Pedido con un comprobante ya en revisión | 409 `ESTADO_PEDIDO_INVALIDO` |
+| | 8 | Sexta subida en una hora para el mismo pedido | 429 |
+| | 9 | Falla `registrar_comprobante()` | El archivo subido se elimina |
+| pgTAP | 10 | `registrar_comprobante()` en un pedido pendiente | Pago `en_revision`, pedido `pago_en_revision` |
+| | 11 | `revisar_comprobante()` aprueba | Pedido `pagado` y totales del cliente actualizados |
+| | 12 | `revisar_comprobante()` rechaza sin motivo | Error de validación |
+| | 13 | `revisar_comprobante()` ejecutada como `anon` o sin MFA | Permiso denegado |
+| | 14 | Segunda aprobación del mismo pedido | Rechazada por el índice único |
 
-**Prueba manual en staging:** un pago aprobado y uno cancelado con la Cajita en modo de pruebas, revisando las transacciones en Payphone Developer. Durante esa prueba hay que confirmar con el proveedor cómo responde la API cuando se confirma una transacción ya vencida, para ajustar el mapeo a 410.
+**Prueba manual:** en local, subir una foto tomada con el celular y un PDF descargado de la banca en línea, y aprobar uno y rechazar el otro desde el panel, revisando los correos.
 
 ---
 
@@ -3045,7 +3069,7 @@ apps/tienda/tests/api/confirmar-payphone.test.ts        # tests de integración
 | Estimación | 8 puntos (unas 20 horas) |
 | Rama | `feat/QB-34-crea-tu-caja` |
 | Etiquetas | `frontend`, `astro`, `react`, `accesibilidad`, `mobile` |
-| Depende de | Tablas de cajas y piezas con datos de prueba · motor de precios `calcularCaja()` en `packages/shared` · store del carrito con soporte para líneas de tipo `caja` · wireframes de "Crea tu caja" aprobados |
+| Depende de | Tablas de cajas y piezas con datos de prueba · motor de precios `calcularCaja()` en `packages/shared` · store del carrito con soporte para líneas de tipo `caja` · **wireframes de "Crea tu caja", pendientes en la sección 1.3: el ticket queda bloqueado hasta que Gaby los apruebe** |
 
 **Objetivo:** construir la página `/crea-tu-caja` con una isla React que guía al comprador por los cinco pasos de la F12, con el panel de la caja y el subtotal siempre visibles, y que agrega la caja al carrito como una sola línea editable.
 
@@ -3080,7 +3104,7 @@ tests/e2e/crea-tu-caja.spec.ts                           # recorrido completo en
 
 1. **Datos (SSR):** `crea-tu-caja.astro` consulta en el servidor las piezas publicadas y habilitadas para caja (con stock, espacios, precio, medios, modelos y opciones), los tipos y diseños de caja activos, las tarjetas y las ocasiones. Los pasa como props a la isla, montada con `client:load` porque es el contenido principal de la página.
 2. **Estado:** `stores/caja.ts` usa `persistentMap` de `@nanostores/persistent` con la clave `qb-caja-en-curso` y guarda solo identificadores, cantidades, opciones y textos; nunca precios. Expone acciones puras y testeables: `agregarPieza`, `quitarPieza`, `cambiarCantidad`, `elegirCaja`, `personalizar`, `escribirDedicatoria` y `reiniciar`.
-3. **Precio y capacidad:** cada cambio recalcula con `calcularCaja()` del paquete compartido, que devuelve el subtotal, el desglose, los espacios usados y los errores. Es la misma lógica que replica `crear_pedido()` en la base de datos.
+3. **Precio y capacidad:** cada cambio recalcula con `calcularCaja()` del paquete compartido, que devuelve el subtotal, el desglose, los espacios usados y los errores. Es la misma lógica que replica `crear_pedido()` en la base de datos, y las dos se prueban contra `casos-precio.json`.
 4. **Reglas en la interfaz:**
    - El botón "Agregar" se deshabilita cuando la pieza no cabe, con el mensaje "Tu caja está llena" y un acceso para cambiar a una caja mayor.
    - No se puede elegir una caja menor si las piezas no caben; se indica cuántos espacios hay que liberar.
@@ -3104,7 +3128,7 @@ tests/e2e/crea-tu-caja.spec.ts                           # recorrido completo en
 
 **Criterios de aceptación:**
 - [ ] Se cumplen los 9 escenarios de la HU1 (sección 5).
-- [ ] El subtotal de la interfaz coincide con el que calcula `crear_pedido()` en los 10 casos de prueba compartidos del motor de precios.
+- [ ] `calcularCaja()` pasa todos los casos de `casos-precio.json`, los mismos que valida `crear_pedido()` en la base de datos.
 - [ ] La caja en curso sobrevive a una recarga, y una caja del carrito se puede editar y volver a guardar.
 - [ ] Funciona en Chrome Android (375 px), Safari iOS y escritorio.
 - [ ] Lighthouse en móvil: rendimiento de 90 o más y accesibilidad de 95 o más; sin errores de axe.
@@ -3117,7 +3141,7 @@ tests/e2e/crea-tu-caja.spec.ts                           # recorrido completo en
 | Componentes (Vitest + Testing Library) | Agregar piezas actualiza el subtotal y los espacios · el botón se deshabilita con la caja llena · no se puede cambiar a una caja menor si no caben las piezas · el contador de la dedicatoria respeta el límite · no se avanza con campos obligatorios vacíos · el estado se restaura desde el almacenamiento |
 | E2E (Playwright, móvil y escritorio) | Recorrido completo: filtrar por ocasión, agregar 3 piezas, personalizar una, elegir caja, escribir dedicatoria, revisar y agregar al carrito · editar la caja desde el carrito · recargar en mitad del recorrido y continuar |
 
-**Diseño:** se implementa a partir de los wireframes de "Crea tu caja" (sección 1.3, material visual pendiente). Si los wireframes no están listos al iniciar, se acuerda con Gaby una versión provisional con los componentes base de la tienda.
+**Diseño:** se implementa a partir de los wireframes de "Crea tu caja", hoy pendientes (sección 1.3). El ticket no se inicia hasta que Gaby los apruebe, para no improvisar la interfaz.
 
 ---
 
@@ -3129,12 +3153,12 @@ tests/e2e/crea-tu-caja.spec.ts                           # recorrido completo en
 
 | Regla | Detalle |
 |---|---|
-| Una pull request por ticket | La rama sale de `staging` con el formato `tipo/QB-XX-descripcion` y vuelve a `staging`. |
+| Una pull request por ticket | La rama sale de `main` con el formato `tipo/QB-XX-descripcion` y vuelve a `main`. |
 | Título | *Conventional Commits* con el ID del ticket: `feat(db): ... [QB-12]`. |
 | CI obligatoria | Lint, verificación de tipos, tests unitarios, pgTAP, build y Lighthouse deben pasar antes de fusionar (sección 2.4). |
-| Revisión | Al menos una aprobación. Los cambios visibles para el comprador o para Gaby se validan además en staging. |
-| Fusión | *Squash and merge*, para dejar un commit por ticket en `staging`. |
-| Producción | Se pasa de `staging` a `main` con una pull request de versión que agrupa los tickets validados. |
+| Revisión | Al menos una aprobación. Gaby valida además, en una demo, los cambios visibles para el comprador o para ella. |
+| Fusión | *Squash and merge*, para dejar un commit por ticket en `main`. |
+| Producción | Al fusionar en `main`, la CI aplica las migraciones y despliega (sección 2.4). El staging separado llega en la fase 2. |
 
 **Plantilla (`.github/pull_request_template.md`):**
 
@@ -3149,10 +3173,10 @@ Resumen en 2 o 3 líneas, y por qué.
 - ...
 
 ## Cómo probar
-Pasos y comandos para reproducir en local o en staging.
+Pasos y comandos para reproducir en local.
 
 ## Evidencias
-Capturas, salida de tests o enlace a la vista previa de staging.
+Capturas, salida de tests o grabación de la demo.
 
 ## Checklist
 - [ ] Cumple los criterios de aceptación del ticket
@@ -3172,7 +3196,7 @@ Qué puede fallar y cómo se revierte.
 | Campo | Valor |
 |---|---|
 | Título | `feat(db): tablas de pedidos y función crear_pedido con validación de cajas [QB-12]` |
-| Rama | `feat/QB-12-crear-pedido` → `staging` |
+| Rama | `feat/QB-12-crear-pedido` → `main` |
 | Ticket | QB-12 · Base de datos · HU1 y HU2a |
 | Estado | Planificada |
 | Etiquetas | `database`, `supabase`, `seguridad` |
@@ -3182,7 +3206,8 @@ Qué puede fallar y cómo se revierte.
 **Cambios principales:**
 - `supabase/migrations/20261103120000_pedidos_tablas.sql`: cinco tipos enumerados; las tablas `pedidos`, `pedido_items`, `pedido_item_opciones` y `pagos`, con sus CHECK, índices únicos parciales (un solo pago aprobado por pedido) y claves foráneas; la secuencia `pedido_codigo_seq`, y RLS con sus políticas.
 - `supabase/migrations/20261103120100_fn_crear_pedido.sql`: la función `crear_pedido(jsonb, uuid)` con `security definer` y `search_path` vacío, ejecutable solo por `service_role`.
-- `supabase/tests/pedidos/crear_pedido.test.sql`: 12 tests pgTAP.
+- `packages/shared/fixtures/casos-precio.json`: casos de precio compartidos con el frontend, escritos antes que la función.
+- `supabase/tests/pedidos/crear_pedido.test.sql`: 13 tests pgTAP, incluidos los casos de precio.
 - `supabase/seed.sql`: una caja, tres piezas y dos ciudades de prueba.
 - `packages/shared/src/database.types.ts`: tipos regenerados.
 
@@ -3194,48 +3219,49 @@ Qué puede fallar y cómo se revierte.
 **Cómo probar:**
 ```bash
 npm run db:reset    # supabase db reset: aplica migraciones y seed
+npm run fixtures:sql  # genera los casos de precio para pgTAP
 npm run db:test     # supabase test db: ejecuta los tests pgTAP
 ```
-Ejecutar `crear_pedido()` desde el editor SQL de Supabase local con el payload de ejemplo de la sección 4: debe devolver un total de 4.865 centavos, con 4.230 de base imponible y 635 de IVA.
+Ejecutar `crear_pedido()` desde el editor SQL de Supabase local con el payload de ejemplo de la sección 4: debe devolver un total de 5.350 centavos, con 4.652 de base imponible y 698 de IVA.
 
-**Riesgos y reversión:** las tablas son nuevas y ningún código las usa todavía, así que revertir es una migración que elimina la función, las tablas y los tipos (incluida en la descripción de la pull request). Riesgo principal: un error en el cálculo del IVA. Lo cubren los tests 1 y 10, más la comparación con el motor de precios del frontend (QB-34).
+**Riesgos y reversión:** las tablas son nuevas y ningún código las usa todavía, así que revertir es una migración que elimina la función, las tablas y los tipos (incluida en la descripción de la pull request). Riesgo principal: un error en el cálculo del IVA. Lo cubren los casos de `casos-precio.json`, los mismos que usa el motor de precios del frontend (QB-34).
 
 ---
 
-### Pull Request 2 — Endpoint de confirmación de pagos con Payphone
+### Pull Request 2 — Carga y revisión del comprobante de transferencia
 
 | Campo | Valor |
 |---|---|
-| Título | `feat(api): confirmar pagos de Payphone de forma idempotente [QB-21]` |
-| Rama | `feat/QB-21-confirmar-payphone` → `staging` |
+| Título | `feat(api): carga y revisión de comprobantes de transferencia [QB-21]` |
+| Rama | `feat/QB-21-comprobante-transferencia` → `main` |
 | Ticket | QB-21 · Backend · HU2b |
 | Estado | Planificada; se abre después de fusionar la PR 1 |
-| Etiquetas | `backend`, `pagos`, `payphone`, `seguridad` |
+| Etiquetas | `backend`, `pagos`, `storage`, `seguridad` |
 
-**Qué cambia:** agrega `POST /api/pagos/payphone/confirmar` según la especificación OpenAPI de la sección 4. Cuando Payphone devuelve al comprador a la tienda, el servidor confirma la transacción dentro del plazo de 5 minutos, la registra y devuelve el resultado para mostrar la confirmación con el botón de WhatsApp.
+**Qué cambia:** agrega `POST /api/pedidos/{token}/comprobante` según la especificación OpenAPI de la sección 4, y las funciones que registran y revisan el comprobante. Con esto, el pago por transferencia, que concentra cerca del 90 % de los pagos actuales de Quinde Blue, queda completo de principio a fin antes de integrar Payphone.
 
 **Cambios principales:**
-- `apps/tienda/src/pages/api/pagos/payphone/confirmar.ts`: el endpoint, con validación Zod, límite de 10 solicitudes por minuto por IP y la tabla de decisiones según la respuesta de Payphone.
-- `apps/tienda/src/lib/payphone.ts`: cliente tipado de la API de confirmación, con un tiempo de espera de 8 segundos.
-- `apps/tienda/src/lib/errores.ts`: traducción de los errores de la base de datos al formato `{ codigo, mensaje, detalles }`.
-- `apps/tienda/src/lib/correo.ts`: correo de confirmación que no bloquea la respuesta.
-- `packages/shared/src/schemas/pagos.ts`: esquemas `ConfirmarPagoRequest` y `ConfirmacionPago`.
-- `apps/tienda/tests/api/confirmar-payphone.test.ts`: 9 tests de integración con Payphone simulado (MSW).
-- `.env.example`: se agregan `PAYPHONE_TOKEN` y `PAYPHONE_API`, sin valores reales.
+- `apps/tienda/src/pages/api/pedidos/[token]/comprobante.ts`: el endpoint, con lectura por partes, límite de 5 MB, límite de solicitudes y errores en el formato `{ codigo, mensaje, detalles }`.
+- `apps/tienda/src/lib/archivos.ts`: comprobación del tipo real por la firma del archivo y nombres generados.
+- `supabase/migrations/20261105120000_fn_comprobantes.sql`: las funciones `registrar_comprobante()` y `revisar_comprobante()`, y las políticas del bucket privado.
+- `supabase/tests/pagos/comprobantes.test.sql` y `apps/tienda/tests/api/comprobante.test.ts`: 5 tests pgTAP y 9 de integración.
+- `apps/tienda/src/lib/correo.ts`: avisos a la administradora y al comprador.
 
 **Decisiones para revisar:**
-- **Atajo idempotente:** si el pedido ya está pagado con la misma transacción, se responde sin volver a llamar a Payphone. Esto cubre las recargas de la página de respuesta.
-- **Un error de red no registra nada:** se responde 502 y la página reintenta mientras dure el plazo. Registrar un pago "fallido" por un problema de red confundiría la conciliación.
-- **Logs mínimos:** se registran el código del pedido, el ID de la transacción, el `statusCode` y la duración. La respuesta completa de Payphone se guarda solo en `pagos.respuesta_proveedor`.
+- **Tipo real del archivo:** se comprueba por la firma de los primeros bytes, no por la extensión ni por el `Content-Type`, que el navegador puede falsear.
+- **Orden subir-y-registrar:** el archivo se sube antes de llamar a `registrar_comprobante()` y se elimina si el registro falla. Así la transacción de la base de datos se mantiene corta.
+- **Rechazo sin perder el pedido:** al rechazar, se extiende el plazo de expiración para que el comprador pueda subir otro comprobante.
+- **Aprobación solo por función:** la administradora aprueba con `revisar_comprobante()`, que exige MFA, y no con un `update` directo sobre la tabla.
 
 **Cómo probar:**
 ```bash
-npm run test -w apps/tienda -- confirmar-payphone   # 9 tests de integración
-npm run dev -w apps/tienda                           # tienda local con Payphone en modo de pruebas
+npm run db:test                                     # tests pgTAP, incluidas las funciones de comprobantes
+npm run test -w apps/tienda -- comprobante          # 9 tests de integración
+npm run dev -w apps/tienda                          # flujo completo en local
 ```
-En staging: hacer un pago aprobado y uno cancelado con la Cajita en modo de pruebas, y revisar que coincidan con las transacciones de Payphone Developer y con la tabla `pagos`.
+Recorrido manual: crear un pedido con transferencia, subir una foto del comprobante, aprobarlo desde el panel y comprobar que el pedido pasa a "pagado" y que llegan los correos. Repetir con un rechazo y una segunda subida.
 
-**Riesgos y reversión:** el endpoint es nuevo y nada depende de él hasta conectar la página `/pago/respuesta`, así que revertir el commit es suficiente. Riesgo abierto: cómo responde Payphone al confirmar una transacción ya vencida. Se verifica en la prueba de staging y, si hace falta, se ajusta el mapeo a 410 en un commit de la misma pull request.
+**Riesgos y reversión:** el endpoint es nuevo, así que revertir es deshacer el commit y aplicar una migración que elimina las dos funciones. Riesgo: si el proceso se cae entre la subida y el registro, puede quedar un archivo huérfano en Storage. Se cubre con una limpieza periódica de archivos sin pago asociado, que queda como tarea de seguimiento.
 
 ---
 
@@ -3244,9 +3270,9 @@ En staging: hacer un pago aprobado y uno cancelado con la Cajita en modo de prue
 | Campo | Valor |
 |---|---|
 | Título | `feat(tienda): configurador Crea tu propia caja con subtotal en vivo [QB-34]` |
-| Rama | `feat/QB-34-crea-tu-caja` → `staging` |
+| Rama | `feat/QB-34-crea-tu-caja` → `main` |
 | Ticket | QB-34 · Frontend · HU1 |
-| Estado | Planificada; puede avanzar en paralelo a la PR 2, pero se fusiona después de la PR 1 |
+| Estado | Planificada; se inicia cuando Gaby apruebe los wireframes y se fusiona después de la PR 1 |
 | Etiquetas | `frontend`, `astro`, `react`, `accesibilidad`, `mobile` |
 
 **Qué cambia:** agrega la página `/crea-tu-caja` con una isla React que guía al comprador por los cinco pasos de la F12. El panel de la caja y el subtotal están siempre visibles, y la caja se agrega al carrito como una sola línea editable. Es la funcionalidad diferencial de la tienda (sección 1.2).
@@ -3260,7 +3286,7 @@ En staging: hacer un pago aprobado y uno cancelado con la Cajita en modo de prue
 
 **Decisiones para revisar:**
 - La isla se monta con `client:load` y no con `client:idle`, porque es el contenido principal de la página y el comprador interactúa con ella de inmediato.
-- El precio se calcula con `calcularCaja()` del paquete compartido. Un test compara sus resultados con los de `crear_pedido()` (PR 1) en 10 casos, para que el subtotal en pantalla y el total cobrado nunca difieran.
+- El precio se calcula con `calcularCaja()` del paquete compartido. Se prueba contra `casos-precio.json`, el mismo archivo con el que la PR 1 prueba `crear_pedido()`, para que el subtotal en pantalla y el total cobrado nunca difieran.
 - En el celular se usa una barra inferior fija en lugar de un panel lateral. Sigue el patrón de barra de compra fija del benchmark de fichas, que solo 1 de 10 marcas aplica.
 
 **Cómo probar:**
@@ -3273,4 +3299,4 @@ Recorrido manual sugerido: filtrar por "Día del Maestro", llenar la caja median
 
 **Evidencias que se adjuntarán:** capturas en 375 px y 1280 px de cada paso, el informe de Lighthouse en móvil (objetivo: rendimiento de 90 o más y accesibilidad de 95 o más) y el tamaño de la isla dentro del presupuesto de 60 KB.
 
-**Riesgos y reversión:** la página es nueva y solo se enlaza desde el inicio cuando se valida en staging, así que revertir no afecta otras rutas. Riesgo principal: diferencias de redondeo entre el cálculo del frontend y el de la base de datos, cubiertas por el test de comparación.
+**Riesgos y reversión:** la página es nueva y solo se enlaza desde el inicio cuando Gaby la valida, así que revertir no afecta otras rutas. Riesgo principal: diferencias de redondeo entre el cálculo del frontend y el de la base de datos, cubiertas por los casos compartidos.
