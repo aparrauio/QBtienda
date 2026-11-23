@@ -6,18 +6,19 @@ Registro de los prompts utilizados con un asistente de IA (Claude, de Anthropic)
 |---|---|
 | Autor | Andrés Parra S. |
 | Repositorio | [github.com/aparrauio/QBtienda](https://github.com/aparrauio/QBtienda) |
-| Periodo | 20 de octubre al 4 de noviembre de 2026 |
+| Periodo | 20 de octubre al 22 de noviembre de 2026 |
 | Herramienta | Claude, con herramientas de transcripción de audio, búsqueda web, navegador y edición de archivos |
 
 ## Proceso de creación
 
-El README se construyó en cinco etapas:
+El README se construyó en seis etapas:
 
 1. **Descubrimiento:** se transcribió la entrevista con la dueña de la marca, que es la fuente de los requisitos.
 2. **Producto:** a partir de la transcripción se definieron el objetivo, las funcionalidades y la experiencia de usuario, y se analizó un sitio de referencia para la funcionalidad de cajas de regalo.
 3. **Técnica:** primero se definió la arquitectura con los lineamientos del autor y se resolvieron las dudas técnicas. Después se trabajaron el modelo de datos, la API, las historias de usuario, los tickets y las pull requests.
 4. **Cierre:** se completó la ficha del proyecto y se agregó el índice.
 5. **Ajustes tras la revisión:** se analizó de forma imparcial el feedback de la revisión de la Entrega 1. El autor decidió qué mejoras aceptar, y se aplicaron primero en la carpeta local del repositorio y luego con push a una rama nueva.
+6. **Ajuste de alcance de la v1:** el autor concentró la primera versión en lo esencial y movió a la fase 2 el visor 3D, "Crea tu propia caja" y el configurador de cajas. El documento se ajustó en todas sus secciones.
 
 Desde la sección 3, cada sección se generó como **borrador aparte**. El autor la validaba y solo entonces se integraba al README. Las confirmaciones cortas de ese ciclo ("Está correcto, únelo al README") no se registran porque no generaron contenido nuevo.
 
@@ -46,6 +47,8 @@ Los prompts se numeran en orden cronológico y se transcriben textualmente.
 | [9. Ajustes tras la revisión](#9-ajustes-tras-la-revisión-de-la-entrega-1) (varias secciones) | Análisis del feedback, sin modificar el documento | P14 |
 | | Sincronización con GitHub y la carpeta local, y rama `feature/ajustes-feedback-entrega-1` | P15 |
 | | 1.2, 1.3, 2.1 a 2.6, 3, 4, 5, 6 y 7: alcance del MVP, transferencia primero, cabos sueltos, casos de precio compartidos y nombre `README.md` | P16 |
+| [10. Ajuste de alcance de la v1](#10-ajuste-de-alcance-de-la-v1) (varias secciones) | Resumen de las funcionalidades con el alcance vigente, sin modificar el documento | P17 |
+| | 0.3, 1.1, 1.2, 1.3, 2.1 a 2.6, 3, 4 (ejemplo sin cajas), 5 (historias 1 y 3), 6 (tickets QB-12 y QB-34) y 7 (PR 1 y PR 3) | P18 |
 
 ---
 
@@ -298,3 +301,41 @@ Extras: Renombrar a README.md
 - **Nombre del archivo:** `readme.md` pasó a `README.md`, lo que arregla el enlace desde este documento.
 
 Se validaron los diagramas Mermaid, la especificación OpenAPI y los enlaces del índice. Luego se escribieron los cambios en la carpeta local y se subieron en el commit `127ea8a`.
+
+---
+
+## 10. Ajuste de alcance de la v1
+
+> **Partes del README modificadas:** 0.3, 1.1, 1.2 (alcance de la v1, F4, F10 y F12), 1.3 (recorrido, pantallas y panel), 2.1 a 2.6, 3.1 y 3.2 (tablas y columnas de cajas marcadas como fase 2), 4 (ejemplo y esquema sin cajas), 5 (nueva historia 1 y ajustes en la historia 3), 6 (ticket QB-34 nuevo y ajustes en QB-12) y 7 (PR 3 nueva y ajustes en la PR 1), además del índice (P18). P17 sirvió para revisar el alcance antes de decidir.
+
+#### Prompt 17 · Resumen de funcionalidades con el alcance vigente
+
+```text
+Dame un resumen de las principales funcionalidades de la aplicación con el actual alcance
+```
+
+**Qué generó:** un resumen de las funcionalidades de la v1 agrupadas en lo que ve el comprador, lo que gestiona Gaby desde el panel, la fase 2 y lo que queda fuera de alcance. No se modificó ningún archivo.
+
+#### Prompt 18 · Ajuste de alcance de la v1
+
+Dos mensajes consecutivos:
+
+```text
+Haremos los cambios en esta rama nueva: feature/ajustes-alcance
+```
+
+```text
+Alcance para v1:
+eliminar visor 3d de las páginas de producto
+eliminar sección crea tu propia caja
+configurador de cajas
+
+todo esto pasa a fase 2. Toma esto en cuenta y ajusta el proyecto
+```
+
+**Qué generó:**
+- **Alcance:** el visor 3D, "Crea tu propia caja" (F12) y el configurador de cajas pasaron a la fase 2. En la v1, la exploración interactiva usa una secuencia de fotos. F12 se mantiene documentada completa, marcada como fase 2.
+- **Historia, ticket y PR del personalizador:** como la historia 1, el ticket de frontend (QB-34) y la PR 3 estaban dedicados a "Crea tu propia caja", se reemplazaron por el personalizador de productos (F3), que sigue en la v1 y es como compra hoy la mayoría de los clientes.
+- **Base de datos y API:** el ticket QB-12 y la PR 1 dejaron de validar cajas y validan la personalización. El ejemplo de la API ya no incluye cajas y su total pasó a 4.400 centavos (3.826 de base imponible y 574 de IVA). Las tablas, columnas y valores ligados a las cajas y al visor 3D quedaron marcados como fase 2.
+
+Se validaron los diagramas Mermaid, la especificación OpenAPI y los enlaces del índice. Luego se escribieron los cambios en la carpeta local y se subieron a la rama `feature/ajustes-alcance`.

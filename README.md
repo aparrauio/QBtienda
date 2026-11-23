@@ -26,17 +26,17 @@
    - [Notas sobre cada endpoint](#notas-sobre-cada-endpoint)
    - [Otros endpoints del BFF](#otros-endpoints-del-bff)
 - [5. Historias de Usuario](#5-historias-de-usuario)
-   - [Historia de Usuario 1 — Armar una caja de regalo](#historia-de-usuario-1--armar-una-caja-de-regalo)
+   - [Historia de Usuario 1 — Personalizar un producto a partir de un modelo base](#historia-de-usuario-1--personalizar-un-producto-a-partir-de-un-modelo-base)
    - [Historia de Usuario 2 — Comprar sin cuenta con un checkout simple](#historia-de-usuario-2--comprar-sin-cuenta-con-un-checkout-simple)
    - [Historia de Usuario 3 — Publicar una página de producto desde el panel](#historia-de-usuario-3--publicar-una-página-de-producto-desde-el-panel)
 - [6. Tickets de Trabajo](#6-tickets-de-trabajo)
    - [Ticket 1 — QB-12 · Tablas de pedidos y función crear_pedido()](#ticket-1--qb-12--tablas-de-pedidos-y-función-crear_pedido)
    - [Ticket 2 — QB-21 · Carga y revisión del comprobante de transferencia](#ticket-2--qb-21--carga-y-revisión-del-comprobante-de-transferencia)
-   - [Ticket 3 — QB-34 · Isla interactiva "Crea tu propia caja"](#ticket-3--qb-34--isla-interactiva-crea-tu-propia-caja)
+   - [Ticket 3 — QB-34 · Isla interactiva del personalizador](#ticket-3--qb-34--isla-interactiva-del-personalizador)
 - [7. Pull Requests](#7-pull-requests)
    - [Pull Request 1 — Tablas de pedidos y función crear_pedido()](#pull-request-1--tablas-de-pedidos-y-función-crear_pedido)
    - [Pull Request 2 — Carga y revisión del comprobante de transferencia](#pull-request-2--carga-y-revisión-del-comprobante-de-transferencia)
-   - [Pull Request 3 — Isla "Crea tu propia caja"](#pull-request-3--isla-crea-tu-propia-caja)
+   - [Pull Request 3 — Isla del personalizador de productos](#pull-request-3--isla-del-personalizador-de-productos)
 
 ---
 
@@ -52,7 +52,7 @@ Andrés Parra S.
 
 ### **0.3. Descripción breve del proyecto:**
 
-Tienda online para **Quinde Blue**, marca ecuatoriana de regalos artesanales de diseño propio (cuadernos, álbumes, cajas de regalo y detalles en madera) hechos a mano en Quito. Hoy casi todas las ventas se cierran por chat en Instagram y WhatsApp, y una compra puede tardar semanas. La plataforma lleva ese proceso a la web: el cliente explora el catálogo, ve el producto en detalle, lo personaliza a partir de modelos base, o arma su propia caja de regalo con un configurador interactivo que calcula el precio al instante, y paga en línea. El contacto humano se mantiene, pero después de la compra y solo para afinar detalles. La tienda incluye además una base de clientes para fidelizar a los compradores recurrentes.
+Tienda online para **Quinde Blue**, marca ecuatoriana de regalos artesanales de diseño propio (cuadernos, álbumes, cajas de regalo y detalles en madera) hechos a mano en Quito. Hoy casi todas las ventas se cierran por chat en Instagram y WhatsApp, y una compra puede tardar semanas. La plataforma lleva ese proceso a la web: el cliente explora el catálogo, ve el producto en detalle, lo personaliza a partir de modelos base, con el precio calculado al instante, y paga en línea. El contacto humano se mantiene, pero después de la compra y solo para afinar detalles. La tienda incluye además una base de clientes para fidelizar a los compradores recurrentes.
 
 ### **0.4. URL del proyecto:**
 
@@ -96,7 +96,7 @@ Tienda online para **Quinde Blue**, marca ecuatoriana de regalos artesanales de 
 
 **Qué valor aporta:**
 
-- **Para el cliente:** una compra clara, rápida y confiable de un regalo artesanal y personalizado, pudiendo explorar el producto en detalle antes de decidir. Además, puede armar su propia caja de regalo y ver el precio final al instante, sin pedir una cotización por chat.
+- **Para el cliente:** una compra clara, rápida y confiable de un regalo artesanal y personalizado, pudiendo explorar el producto en detalle antes de decidir. Además, ve el precio final de su personalización al instante, sin pedir una cotización por chat.
 - **Para la marca:** más ventas cerradas con menos tiempo de chat, una imagen profesional coherente con el posicionamiento "artesanal" (y no "manualidades") y una base de clientes que permite fidelizar.
 
 **Para quién:**
@@ -122,19 +122,21 @@ Cada funcionalidad responde a una necesidad que salió en la entrevista. La prio
 | F1 | Catálogo curado por categorías | "Que sea fácil encontrar lo que esté buscando, que tengan las categorías bien definidas." | MVP |
 | F2 | Ficha de producto con información clara | "Que en la página esté toda muy clara la información." | MVP |
 | F3 | Personalizador por modelos base | "Personalizar sí va, sí o sí", pero "no personalizar cada detalle". | MVP |
-| F4 | Exploración interactiva del producto | Preguntas frecuentes como "¿cómo es por dentro el cuaderno?" | MVP, incluido el visor 3D |
+| F4 | Exploración interactiva del producto | Preguntas frecuentes como "¿cómo es por dentro el cuaderno?" | MVP (secuencia de fotos; visor 3D: fase 2) |
 | F5 | Carrito y pago en línea | "Que paguen por su lado." | MVP (primero transferencia, luego Payphone) |
 | F6 | Envío o retiro en el checkout | Los datos de envío hoy se piden por chat. | MVP |
 | F7 | Chat posterior a la compra | "Que se realice la compra y después se haga un chat personal." | MVP |
 | F8 | Base de clientes (mini CRM) | Teléfonos dispersos en los chats; deseo de clientes fijos. | MVP (importación de la lista actual: fase 2) |
 | F9 | Promociones y lanzamientos para la comunidad | "Tal vez lo de las promociones, sí." | Fase 2 |
-| F10 | Panel de administración | Gestión autónoma de productos y pedidos. | MVP (editor por bloques: fase 2) |
+| F10 | Panel de administración | Gestión autónoma de productos y pedidos. | MVP (editor por bloques y configurador de cajas: fase 2) |
 | F11 | Sección "Detrás de la marca" | Generar confianza ("una persona detrás de la pantalla"). | MVP |
-| F12 | Crea tu propia caja de regalo | Las cajas de regalo hoy se cotizan pieza por pieza en el chat; Gaby quiere que "paguen por su lado". | MVP (varias cajas por pedido y tarjeta corporativa: fase 2) |
+| F12 | Crea tu propia caja de regalo | Las cajas de regalo hoy se cotizan pieza por pieza en el chat; Gaby quiere que "paguen por su lado". | Fase 2 |
 | — | Realidad aumentada | "No me suena tanto." | Fuera de alcance |
 
-**Alcance del MVP (ajustado tras la revisión de la Entrega 1):** la primera versión se centra en el camino de compra, sin sacrificar la experiencia de usuario, que es la prioridad del proyecto. Por eso el visor avanzado (F4) se mantiene en la fase 1. Pasan a la fase 2:
-- el editor de páginas por bloques: en el MVP, las fichas tienen estructura fija y se completan desde un formulario;
+**Alcance del MVP (v1):** la primera versión se centra en el camino de compra: catálogo, ficha de producto, personalizador, checkout sin cuenta y un panel para gestionar productos y pedidos. El alcance se ajustó dos veces: tras la revisión de la Entrega 1 y, después, al concentrar la v1 en lo esencial. Pasan a la fase 2:
+- el visor 3D de las fichas de producto: en la v1, la exploración interactiva usa una secuencia de fotos;
+- "Crea tu propia caja de regalo" (F12) y el configurador de cajas del panel;
+- el editor de páginas por bloques: en la v1, las fichas tienen estructura fija y se completan desde un formulario;
 - el código por correo para clientes recurrentes y sus direcciones guardadas;
 - la importación de la lista actual de clientes;
 - el entorno de staging separado;
@@ -160,7 +162,8 @@ En pagos, primero se implementa la transferencia, que hoy concentra cerca del 90
 
 #### F4. Exploración interactiva del producto
 - Visor que permite "abrir" el producto: hojear el cuaderno, ver el tipo de hojas, ver el interior de un álbum o qué contiene una caja de regalo.
-- Incluido en el MVP: un visor 3D en el que el cliente gira y acerca el producto, con animaciones de apertura (hojear el cuaderno, abrir la caja). La dueña lo ve útil para el catálogo y la experiencia de usuario es la prioridad del proyecto. Si un producto no tiene modelo 3D, el visor usa una secuencia de fotos.
+- En la v1, el visor usa una secuencia de fotos que el cliente recorre (hojear el cuaderno, ver el interior de un álbum).
+- El visor 3D, en el que el cliente gira y acerca el producto, pasa a la fase 2. La dueña lo ve útil para el catálogo, pero no es imprescindible para vender.
 - **Realidad aumentada: fuera de alcance**, porque la dueña no la ve alineada con su marca.
 
 #### F5. Carrito y pago en línea
@@ -191,6 +194,7 @@ En pagos, primero se implementa la transferencia, que hoy concentra cerca del 90
 #### F10. Panel de administración
 - Alta y edición de productos, modelos base y opciones de personalización.
 - Fichas de producto, colecciones y "Detrás de la marca" con estructura fija, completadas desde formularios. El editor por bloques queda para la fase 2.
+- El configurador de cajas (productos habilitados, tamaños, diseños y tarjetas) llega en la fase 2, junto con F12.
 - Gestión de pedidos y cambio de estados.
 - Consulta de la base de clientes.
 - Indicadores básicos: pedidos por la web, ingresos y clientes recurrentes.
@@ -200,7 +204,9 @@ En pagos, primero se implementa la transferencia, que hoy concentra cerca del 90
 - Refuerza la confianza y la diferenciación. En Instagram, el contenido con la fundadora duplica la interacción del contenido de solo producto.
 - En el MVP es una página de estructura fija que Gaby completa desde un formulario.
 
-#### F12. Crea tu propia caja de regalo
+#### F12. Crea tu propia caja de regalo (fase 2)
+
+> Pasa a la fase 2 al concentrar la v1 en lo esencial. Se documenta completa porque ya está analizada y diseñada.
 
 El cliente arma una caja de regalo paso a paso: agrega productos, elige la caja y escribe la dedicatoria. La plataforma calcula el precio en tiempo real y pide solo los datos que corresponden a lo elegido.
 
@@ -232,7 +238,7 @@ El cliente arma una caja de regalo paso a paso: agrega productos, elige la caja 
 
 **Datos que se solicitan:** solo los que exige lo elegido. Son los campos de personalización de cada pieza y el mensaje y la firma de la tarjeta. Opcionalmente, el nombre de quien recibe el regalo y una fecha deseada de entrega. Los datos de envío se piden una sola vez, en el checkout.
 
-**Fase 2:**
+**Ampliaciones posteriores:**
 - Varias cajas en un mismo pedido, cada una con su propio contenido y su propia dedicatoria.
 - Tarjeta con el logo del cliente para **regalos corporativos**, con un pedido mínimo de cajas.
 - **Cajas sugeridas** ya armadas por ocasión, que el cliente puede usar como punto de partida y modificar.
@@ -265,13 +271,6 @@ flowchart TD
     E --> F[Personalizar<br/>modelo base + color, nombre, texto, hojas]
     D --> F
     F --> G[Carrito<br/>resumen de opciones y precio]
-    B --> CB[Crea tu propia caja]
-    CB --> CB1[1. Elige tus productos<br/>subtotal y capacidad en vivo]
-    CB1 --> CB2[2. Personaliza las piezas]
-    CB2 --> CB3[3. Elige la caja<br/>tamaño y diseño]
-    CB3 --> CB4[4. Escribe la dedicatoria]
-    CB4 --> CB5[5. Vista previa<br/>desglose y precio final]
-    CB5 --> G
     G --> H[Checkout<br/>datos de contacto + envío o retiro]
     H --> I{Método de pago}
     I -->|Tarjeta| J[Pasarela de pago]
@@ -285,32 +284,30 @@ flowchart TD
 
 #### Pantalla por pantalla
 
-1. **Inicio:** mensaje de marca (regalos de diseño propio, hechos a mano en Quito), acceso directo a las ~4 categorías y a **"Crea tu propia caja"**, productos destacados y un bloque breve "Detrás de la marca" con Gaby.
+1. **Inicio:** mensaje de marca (regalos de diseño propio, hechos a mano en Quito), acceso directo a las ~4 categorías, productos destacados y un bloque breve "Detrás de la marca" con Gaby.
 2. **Categoría:** cuadrícula limpia de productos con foto, nombre y precio base. Sin filtros complejos, porque el catálogo es pequeño.
 3. **Ficha de producto:** galería de fotos y videos propios, descripción, materiales, tiempos de elaboración y preguntas frecuentes, con un llamado claro a "Personalizar".
-4. **Exploración interactiva:** visor 3D para girar y acercar el producto, hojear el cuaderno, ver el tipo de hojas o el interior de una caja de regalo. Responde antes de comprar las preguntas que hoy llegan por chat.
+4. **Exploración interactiva:** visor con una secuencia de fotos para hojear el cuaderno, ver el tipo de hojas o el interior de una caja de regalo. Responde antes de comprar las preguntas que hoy llegan por chat.
 5. **Personalizador:** el usuario elige un modelo base y avanza por pasos (color, nombre o texto, tipo de hojas o material), con vista previa y precio actualizado.
-6. **Crea tu propia caja:** un configurador por pasos con un indicador de avance ("Paso 2 de 5"). Un **panel fijo** muestra la caja en construcción: miniaturas de las piezas, control de cantidad, botón para quitar, espacios usados y **subtotal en vivo**. En el celular, ese panel se convierte en una barra inferior desplegable con el subtotal y el botón "Siguiente". El último paso muestra la vista previa con el desglose del precio antes de agregar la caja al carrito.
-7. **Carrito:** lista de productos con el resumen de su personalización, opción de editar y total.
-8. **Checkout:** una sola página con datos de contacto, elección de envío (Servientrega) o retiro, y método de pago (tarjeta o transferencia).
-9. **Confirmación:** número de orden, resumen, próximos pasos y botón de WhatsApp con el pedido ya referenciado para afinar detalles.
-10. **Seguimiento:** estado del pedido (recibido, en elaboración, enviado o listo para retirar, entregado).
+6. **Carrito:** lista de productos con el resumen de su personalización, opción de editar y total.
+7. **Checkout:** una sola página con datos de contacto, elección de envío (Servientrega) o retiro, y método de pago (tarjeta o transferencia).
+8. **Confirmación:** número de orden, resumen, próximos pasos y botón de WhatsApp con el pedido ya referenciado para afinar detalles.
+9. **Seguimiento:** estado del pedido (recibido, en elaboración, enviado o listo para retirar, entregado).
 
 #### Recorrido de la administradora
 
 1. **Acceso al panel**, con inicio de sesión.
 2. **Pedidos:** lista de pedidos nuevos con su personalización, comprobantes de transferencia por validar y cambio de estado.
-3. **Catálogo:** alta y edición de productos, modelos base, opciones de personalización, contenido multimedia (fotos, videos y modelos 3D) y la ficha de cada producto, completada desde un formulario.
-4. **Configurador de cajas:** qué productos están habilitados para caja y cuántos espacios ocupa cada uno, tamaños y diseños de caja con su precio y capacidad, diseños de tarjeta y ocasiones de filtro. En los pedidos con cajas armadas se ve el contenido completo y la dedicatoria que hay que escribir a mano.
-5. **Clientes:** base de clientes con historial de compras. La importación de la lista existente llega en la fase 2.
-6. **Promociones (fase 2):** creación de cupones y lanzamientos exclusivos para clientes recurrentes.
-7. **Indicadores:** pedidos web, ingresos y porcentaje de clientes recurrentes.
+3. **Catálogo:** alta y edición de productos, modelos base, opciones de personalización, contenido multimedia (fotos y videos) y la ficha de cada producto, completada desde un formulario.
+4. **Clientes:** base de clientes con historial de compras. La importación de la lista existente llega en la fase 2.
+5. **Promociones (fase 2):** creación de cupones y lanzamientos exclusivos para clientes recurrentes.
+6. **Indicadores:** pedidos web, ingresos y porcentaje de clientes recurrentes.
 
 #### Material visual
 
 | Recurso | Estado |
 |---|---|
-| Wireframes de baja fidelidad (inicio, producto, personalizador, "Crea tu propia caja", checkout) | Pendiente |
+| Wireframes de baja fidelidad (inicio, producto, personalizador, checkout) | Pendiente |
 | Mockups de alta fidelidad | Pendiente |
 | Videotutorial del recorrido completo | Pendiente (cuando exista el prototipo) |
 
@@ -372,7 +369,7 @@ La solución combina cuatro patrones conocidos:
 
 | Patrón | Dónde se aplica | Qué aporta |
 |---|---|---|
-| **Arquitectura de islas** (*Islands Architecture*) | Tienda en Astro | Cada página llega como HTML ya renderizado y solo los componentes interactivos (personalizador, "Crea tu caja", carrito, checkout) cargan JavaScript. |
+| **Arquitectura de islas** (*Islands Architecture*) | Tienda en Astro | Cada página llega como HTML ya renderizado y solo los componentes interactivos (personalizador, visor, carrito, checkout) cargan JavaScript. |
 | **Backend as a Service (BaaS)** | Supabase | Base de datos, autenticación, archivos y tareas programadas gestionados, sin servidor propio que mantener. |
 | **Backend for Frontend (BFF)** | Endpoints `/api` de Astro | Una capa delgada de servidor solo para lo que no puede ocurrir en el navegador: crear pedidos con precios recalculados, confirmar pagos con Payphone y enviar correos. |
 | **Monorepo** | Repositorio único | La tienda, el panel, los tipos, las validaciones y el motor de precios se versionan juntos y comparten código. |
@@ -412,13 +409,13 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 
 | Componente | Tecnología | Responsabilidad |
 |---|---|---|
-| **Tienda** | Astro (SSR con `@astrojs/node`), React para las islas, Tailwind CSS, nanostores, Zod | Páginas públicas, configuradores, carrito y checkout. |
+| **Tienda** | Astro (SSR con `@astrojs/node`), React para las islas, Tailwind CSS, nanostores, Zod | Páginas públicas, personalizador, carrito y checkout. |
 | **Endpoints BFF** | Rutas `/api` de Astro sobre Node.js 22 | Crear pedidos, confirmar pagos, enviar correos, revalidar la caché. |
 | **Panel de administración** | Vite + React + Refine (`@refinedev/supabase`) | Gestión de catálogo, fichas, pedidos, comprobantes y clientes. |
 | **Paquete compartido** | TypeScript + Zod | Tipos de la base de datos, esquemas de validación, motor de precios, esquemas de contenido de las fichas y casos de precio compartidos. |
 | **Base de datos** | Supabase PostgreSQL, RLS, funciones SQL | Datos del negocio, reglas de acceso y lógica crítica (precios, pedidos, pagos). |
 | **Autenticación** | Supabase Auth | Acceso con MFA para la administradora. Las cuentas de clientes recurrentes con código por correo llegan en la fase 2. |
-| **Archivos** | Supabase Storage | Fotos, videos y modelos 3D de producto (públicos), comprobantes de transferencia (privados). |
+| **Archivos** | Supabase Storage | Fotos y videos de producto (públicos), comprobantes de transferencia (privados). |
 | **Tareas programadas** | `pg_cron` y `pg_net` en Supabase | Liberar pedidos sin pago, recordatorios, segmentación del CRM, webhooks de revalidación. |
 | **Pasarela de pago** | Payphone, Cajita de Pagos + API de confirmación | Cobro con tarjeta o saldo Payphone sin salir de la tienda. |
 | **Correo transaccional** | SMTP de Hostinger con Nodemailer | Confirmación de pedido, cambios de estado y enlace de seguimiento. |
@@ -428,8 +425,7 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 - **Renderizado:** las páginas se generan en el servidor (SSR) con una caché en memoria de vida corta. Cuando Gaby publica un cambio, un webhook de la base de datos llama a `/api/revalidar` y la página se regenera sin redesplegar el sitio.
 - **Islas interactivas (React):**
   - `Personalizador` (F3): modelo base y opciones del producto.
-  - `CreaTuCaja` (F12): productos, capacidad, caja, dedicatoria y vista previa.
-  - `VisorProducto` (F4): visor 3D con el componente web `<model-viewer>` (modelos glTF/GLB), con una secuencia de fotos como respaldo y la realidad aumentada desactivada. Se carga cuando el visor entra en pantalla, para no afectar la carga inicial de la ficha.
+  - `VisorProducto` (F4): exploración con una secuencia de fotos (hojear el cuaderno, ver el interior de un álbum). Se carga cuando el visor entra en pantalla, para no afectar la carga inicial de la ficha. El visor 3D llega en la fase 2.
   - `Carrito` y `Checkout` (F5, F6).
 - **Estado del carrito:** se guarda con nanostores en el almacenamiento local del navegador. Solo contiene identificadores de producto y opciones, nunca precios autoritativos ni datos personales.
 - **Precio en pantalla:** el motor de precios del paquete compartido calcula el subtotal al instante en el navegador. El precio que se cobra lo recalcula siempre la base de datos al crear el pedido. Las dos implementaciones se prueban contra el mismo archivo de casos (sección 2.6).
@@ -440,7 +436,7 @@ Las restricciones del proyecto son: JavaScript/TypeScript de punta a punta, Supa
 
 | Endpoint | Función |
 |---|---|
-| `POST /api/pedidos` | Valida el carrito y los datos de entrega con Zod y llama a la función `crear_pedido()` de la base de datos. Esa función recalcula los precios, valida la capacidad de las cajas y el stock, y devuelve el código del pedido y el monto en centavos para Payphone. |
+| `POST /api/pedidos` | Valida el carrito y los datos de entrega con Zod y llama a la función `crear_pedido()` de la base de datos. Esa función recalcula los precios, valida el stock y la personalización, y devuelve el código del pedido y el monto en centavos para Payphone. |
 | `POST /api/pagos/payphone/confirmar` | Lo llama la página de retorno de Payphone (`/pago/respuesta`). Confirma la transacción con la API de Payphone y registra el pago con `registrar_pago()`. Es idempotente. |
 | `POST /api/pedidos/{token}/comprobante` | Recibe el comprobante de transferencia, lo guarda en un bucket privado y pasa el pedido a revisión. |
 | `POST /api/revalidar` | Invalida la caché de las páginas afectadas cuando se publica contenido. Está protegido con un secreto compartido. |
@@ -457,7 +453,7 @@ sequenceDiagram
     participant PP as Payphone
     C->>T: Completa el checkout
     T->>API: POST /api/pedidos con carrito y entrega
-    API->>DB: crear_pedido() recalcula precios, envío y capacidad
+    API->>DB: crear_pedido() recalcula precios, envío y stock
     DB-->>API: Pedido pendiente_pago con código y total
     API-->>T: Código del pedido y monto en centavos
     T->>PP: Muestra la Cajita con clientTransactionId igual al código
@@ -472,12 +468,12 @@ sequenceDiagram
 
 #### Panel de administración (React + Refine)
 
-- **Recursos CRUD:** productos, modelos base, opciones de personalización, categorías, colecciones, tamaños y diseños de caja, tarjetas, pedidos y clientes. Los cupones y lanzamientos llegan en la fase 2.
-- **Formularios de fichas:** Gaby completa las secciones fijas de cada ficha (textos, preguntas frecuentes, medios y modelo 3D). Cada sección se valida con su esquema Zod del paquete compartido. El editor por bloques queda para la fase 2.
+- **Recursos CRUD:** productos, modelos base, opciones de personalización, categorías, colecciones, pedidos y clientes. El configurador de cajas, los cupones y los lanzamientos llegan en la fase 2.
+- **Formularios de fichas:** Gaby completa las secciones fijas de cada ficha (textos, preguntas frecuentes y medios). Cada sección se valida con su esquema Zod del paquete compartido. El editor por bloques queda para la fase 2.
 - **Borrador y publicación:** el contenido tiene estado borrador o publicado. La vista previa abre la página real de la tienda en un marco con un token temporal. Al publicar, se dispara la revalidación.
 - **Mini CRM:** clientes creados automáticamente con cada pedido, historial, segmentos (nuevo, recurrente, inactivo). La importación de la lista actual en CSV llega en la fase 2.
 - **Promociones y lanzamientos (fase 2):** cupones con reglas y vigencia, y lanzamientos programados con acceso anticipado para un segmento de clientes.
-- **Pedidos:** cambio de estados, validación de comprobantes de transferencia y vista de las cajas armadas con la dedicatoria que hay que escribir a mano.
+- **Pedidos:** cambio de estados, validación de comprobantes de transferencia y detalle de la personalización de cada línea.
 - **Despliegue:** se compila a archivos estáticos y se sirve en un subdominio propio. No consume un proceso Node.js y queda aislado de la tienda.
 
 #### Base de datos (Supabase)
@@ -497,17 +493,17 @@ QBtienda/
 │   ├── tienda/                    # Tienda pública (Astro + islas React)
 │   │   ├── src/
 │   │   │   ├── pages/             # Rutas: inicio, categorías, producto/[slug],
-│   │   │   │   │                  # crea-tu-caja, carrito, checkout,
+│   │   │   │   │                  # carrito, checkout,
 │   │   │   │   │                  # pago/respuesta, pedido/[token], detras-de-la-marca
 │   │   │   │   └── api/           # Endpoints BFF: pedidos, pagos, comprobantes, revalidar
 │   │   │   ├── islands/           # Componentes React interactivos: Personalizador,
-│   │   │   │                      # CreaTuCaja, VisorProducto, Carrito, Checkout
+│   │   │   │                      # VisorProducto, Carrito, Checkout
 │   │   │   ├── secciones/         # Secciones de las plantillas fijas (galería, visor, preguntas frecuentes)
 │   │   │   ├── components/        # Componentes Astro estáticos (cabecera, tarjetas, pie)
 │   │   │   ├── layouts/           # Plantillas de página
 │   │   │   ├── lib/               # Clientes de Supabase (servidor y navegador),
 │   │   │   │                      # Payphone, correo, caché
-│   │   │   ├── stores/            # Estado del carrito y de la caja (nanostores)
+│   │   │   ├── stores/            # Estado del carrito y de la personalización (nanostores)
 │   │   │   ├── middleware.ts      # Cabeceras de seguridad y límite de solicitudes
 │   │   │   └── styles/            # Tailwind y tokens de marca
 │   │   ├── public/                # Favicon, fuentes y archivos estáticos
@@ -515,8 +511,8 @@ QBtienda/
 │   └── admin/                     # Panel de administración (Vite + React + Refine)
 │       └── src/
 │           ├── resources/         # Una carpeta por recurso: productos, categorias,
-│           │                      # colecciones, cajas, pedidos, clientes,
-│           │                      # paginas (promociones en la fase 2)
+│           │                      # colecciones, pedidos, clientes,
+│           │                      # paginas (cajas y promociones en la fase 2)
 │           ├── components/
 │           │   └── formularios-ficha/ # Formularios de las fichas y vista previa
 │           ├── providers/         # Proveedores de datos y autenticación de Supabase
@@ -528,7 +524,7 @@ QBtienda/
 │       └── src/
 │           ├── database.types.ts  # Tipos generados desde Supabase
 │           ├── schemas/           # Esquemas Zod (carrito, checkout, contenido, pagos)
-│           ├── pricing/           # Motor de precios (productos, cajas, cupones, envío)
+│           ├── pricing/           # Motor de precios (productos, personalización, envío)
 │           └── contenido/         # Esquemas de las secciones de cada plantilla
 ├── supabase/
 │   ├── migrations/                # Esquema, RLS, funciones y triggers en SQL versionado
@@ -638,7 +634,7 @@ flowchart LR
 
 #### Integridad de pedidos y pagos
 
-- **El precio nunca viene del navegador.** `crear_pedido()` recalcula en la base de datos el precio de cada producto, personalización, caja, tarjeta y envío. El precio que muestra la tienda es solo informativo.
+- **El precio nunca viene del navegador.** `crear_pedido()` recalcula en la base de datos el precio de cada producto, personalización y envío. El precio que muestra la tienda es solo informativo.
 - **Transferencias revisadas por la administradora.** El comprobante se guarda en un bucket privado y el pedido solo pasa a pagado cuando Gaby lo aprueba con `revisar_comprobante()`, que exige MFA. Un índice único impide que un pedido tenga dos pagos aprobados.
 - **Confirmación del pago en el servidor.** Al volver de Payphone, el servidor confirma la transacción con la API de Payphone y `registrar_pago()` verifica que:
   - el estado sea aprobado (`statusCode` 3);
@@ -664,7 +660,7 @@ flowchart LR
 
 #### Protección de la aplicación
 
-- **Validación en cliente y servidor** con los mismos esquemas Zod del paquete compartido (checkout, dirección, dedicatoria, contenido de las fichas).
+- **Validación en cliente y servidor** con los mismos esquemas Zod del paquete compartido (checkout, dirección, personalización, contenido de las fichas).
 - **Protección contra bots:** Cloudflare Turnstile en el checkout. Se suman límites de solicitudes por IP en los endpoints `/api` y los límites propios de Supabase Auth.
 - **Cabeceras de seguridad** desde el middleware de Astro: Content Security Policy (que solo permite los dominios de Supabase y Payphone), HSTS, `X-Content-Type-Options` y `frame-ancestors` (para que la tienda no se pueda incrustar en sitios ajenos).
 - **HTTPS obligatorio** con el certificado SSL de Hostinger, que además es requisito de Payphone.
@@ -685,13 +681,13 @@ flowchart LR
 
 | Tipo | Herramienta | Qué se prueba | Ejemplos de casos |
 |---|---|---|---|
-| **Unitarios** | Vitest | Motor de precios y esquemas del paquete compartido. | Una caja con 3 piezas, personalización y tarjeta suma el total correcto. Una pieza que excede la capacidad de la caja se rechaza. El IVA se redondea igual que en la base de datos. Una dedicatoria de más de 300 caracteres no pasa la validación. |
+| **Unitarios** | Vitest | Motor de precios y esquemas del paquete compartido. | Un producto con modelo base y dos opciones con recargo suma el total correcto. Una opción de texto que supera su límite no pasa la validación. El IVA se redondea igual que en la base de datos. |
 | **Base de datos y RLS** | pgTAP (`supabase test db`) | Reglas de acceso y funciones SQL. | Un visitante no ve productos en borrador. Una sesión sin MFA no puede modificar productos. `crear_pedido()` ignora un precio manipulado desde el cliente y devuelve los totales de cada caso del archivo compartido. `registrar_pago()` rechaza un monto distinto al del pedido y un segundo pago del mismo pedido. |
 | **Integración de endpoints** | Vitest; la API de Payphone se simula con MSW | Flujo de pedido, comprobante y pago en el servidor. | Comprobante válido: el pedido pasa a "pago en revisión". Archivo de un tipo no permitido: 415. Pago con Payphone aprobado: el pedido pasa a "pagado" y se envía el correo. Pago cancelado (`statusCode` 2): el pedido sigue pendiente. Error de red al confirmar: se muestra "pago no completado". |
-| **Extremo a extremo** | Playwright, en escritorio y móvil | Recorridos completos. | Compra como invitado con transferencia y carga de comprobante. Compra con Payphone en modo de pruebas. "Crea tu caja" de principio a fin, con el panel inferior en móvil. Gaby publica una ficha en el panel y aparece en la tienda. |
+| **Extremo a extremo** | Playwright, en escritorio y móvil | Recorridos completos. | Compra como invitado con transferencia y carga de comprobante. Compra con Payphone en modo de pruebas. Personalizar un producto y agregarlo al carrito, con la barra de compra fija en móvil. Gaby publica una ficha en el panel y aparece en la tienda. |
 | **Rendimiento y accesibilidad** | Lighthouse CI | Presupuestos en cada pull request. | LCP menor a 2,5 s en móvil en la ficha de producto, puntaje de accesibilidad de 90 o más y un presupuesto de JavaScript por página. |
 
-**Casos de precio compartidos.** El precio se calcula en dos lenguajes: TypeScript para la pantalla y SQL para el cobro. Para que nunca difieran, los casos se escriben primero en `packages/shared/fixtures/casos-precio.json`. Cada caso tiene la entrada (productos, cajas, envío y configuración de IVA) y los totales esperados, incluidos los casos límite de redondeo del IVA.
+**Casos de precio compartidos.** El precio se calcula en dos lenguajes: TypeScript para la pantalla y SQL para el cobro. Para que nunca difieran, los casos se escriben primero en `packages/shared/fixtures/casos-precio.json`. Cada caso tiene la entrada (productos, personalización, envío y configuración de IVA) y los totales esperados, incluidos los casos límite de redondeo del IVA.
 - Vitest prueba el motor de precios con ese archivo.
 - Un script (`npm run fixtures:sql`) lo convierte a `supabase/tests/fixtures/casos_precio.sql`, para que pgTAP pruebe `crear_pedido()` con los mismos casos.
 - Un caso nuevo se agrega al archivo antes de cambiar cualquiera de las dos implementaciones, y el asistente de IA genera cada implementación contra esos casos.
@@ -715,7 +711,7 @@ El modelo vive en **Supabase (PostgreSQL)** y se define con migraciones SQL vers
 | Borrado | Estados (`borrador`, `publicado`, `archivado`, `activo`) en lugar de borrar filas | Se conserva la integridad de los pedidos y del historial. |
 | Usuarios | Las cuentas viven en `auth.users`, que gestiona Supabase Auth; las tablas propias se vinculan a ella | La autenticación queda en Supabase y los datos de negocio, en tablas propias. |
 
-**Alcance del MVP:** las tablas marcadas como *fase 2* (`direcciones`, `compras_historicas`, `cupones`, `cupon_usos` y `lanzamientos`) se documentan para mostrar el modelo completo, pero no se migran en la primera versión. La columna `pedidos.cupon_id` se agrega junto con su tabla en la fase 2.
+**Alcance del MVP:** las tablas marcadas como *fase 2* (`direcciones`, `compras_historicas`, `tipos_caja`, `disenos_caja`, `disenos_tarjeta`, `ocasiones`, `producto_ocasiones`, `cupones`, `cupon_usos` y `lanzamientos`) se documentan para mostrar el modelo completo, pero no se migran en la v1. También llegan en la fase 2 la columna `pedidos.cupon_id`, las columnas ligadas a las cajas (`productos.habilitado_caja`, `productos.espacios_caja` y las columnas de caja de `pedido_items`), los valores `caja` y `pieza_caja` de `tipo_item` y el valor `modelo_3d` de `tipo_medio`.
 
 ### **3.1. Diagrama del modelo de datos:**
 
@@ -892,7 +888,7 @@ erDiagram
     }
 ```
 
-#### Caja de regalo, envíos y configuración (F6, F12)
+#### Caja de regalo (fase 2), envíos y configuración (F6, F12)
 
 ```mermaid
 erDiagram
@@ -1204,7 +1200,7 @@ stateDiagram-v2
 | Tipo | Valores | Uso |
 |---|---|---|
 | `estado_publicacion` | `borrador`, `publicado`, `archivado` | Productos, colecciones y páginas. |
-| `tipo_medio` | `imagen`, `video`, `modelo_3d` | Medios de producto. `modelo_3d` es el archivo GLB del visor (F4). |
+| `tipo_medio` | `imagen`, `video`, `modelo_3d` | Medios de producto. `modelo_3d` es el archivo GLB del visor 3D (fase 2). |
 | `tipo_opcion` | `seleccion`, `color`, `texto` | Opciones de personalización. |
 | `tipo_pagina` | `inicio`, `producto`, `coleccion`, `marca`, `libre` | Páginas editables, con estructura fija en el MVP. |
 | `origen_cliente` | `web`, `importado` | Si el cliente compró en la web o viene de la lista actual. |
@@ -1212,7 +1208,7 @@ stateDiagram-v2
 | `estado_pedido` | `pendiente_pago`, `pago_en_revision`, `pagado`, `en_elaboracion`, `enviado`, `listo_retiro`, `entregado`, `cancelado`, `expirado` | Ciclo de vida del pedido. |
 | `metodo_entrega` | `envio`, `retiro` | Envío por Servientrega o retiro en persona. |
 | `metodo_pago` | `payphone`, `transferencia` | Métodos de pago aceptados. |
-| `tipo_item` | `producto`, `caja`, `pieza_caja` | Tipo de línea de pedido. |
+| `tipo_item` | `producto`, `caja`, `pieza_caja` | Tipo de línea de pedido. `caja` y `pieza_caja` llegan en la fase 2. |
 | `estado_pago` | `pendiente`, `en_revision`, `aprobado`, `rechazado`, `cancelado`, `revertido` | Estado de cada intento de pago. |
 | `tipo_descuento` | `porcentaje`, `monto_fijo`, `envio_gratis` | Tipo de cupón. |
 | `estado_lanzamiento` | `programado`, `activo`, `finalizado` | Lanzamientos de colecciones. |
@@ -1248,23 +1244,23 @@ stateDiagram-v2
 | `materiales`, `medidas` | `text` | | Información técnica que hoy se pregunta por chat. |
 | `precio_base_centavos` | `int` | NOT NULL, CHECK ≥ 0 | Precio sin personalización. |
 | `dias_elaboracion` | `smallint` | NOT NULL, CHECK > 0 | Tiempo de fabricación que se muestra al cliente. |
-| `stock` | `int` | CHECK ≥ 0 | `NULL` significa "hecho bajo pedido". Con 0, el producto deja de mostrarse en el configurador de cajas. |
+| `stock` | `int` | CHECK ≥ 0 | `NULL` significa "hecho bajo pedido". Con 0, el producto no se puede comprar. |
 | `estado` | `estado_publicacion` | NOT NULL, DEFAULT `borrador` | Solo los publicados son visibles. |
 | `es_personalizable` | `boolean` | NOT NULL, DEFAULT false | Activa el personalizador (F3). |
-| `habilitado_caja` | `boolean` | NOT NULL, DEFAULT false | Permite incluirlo en "Crea tu caja" (F12). |
-| `espacios_caja` | `smallint` | CHECK > 0; CHECK (`NOT habilitado_caja OR espacios_caja IS NOT NULL`) | Cuántos espacios ocupa dentro de una caja. |
+| `habilitado_caja` | `boolean` | NOT NULL, DEFAULT false | Permite incluirlo en "Crea tu caja" (F12). Fase 2. |
+| `espacios_caja` | `smallint` | CHECK > 0; CHECK (`NOT habilitado_caja OR espacios_caja IS NOT NULL`) | Cuántos espacios ocupa dentro de una caja. Fase 2. |
 | `destacado` | `boolean` | NOT NULL, DEFAULT false | Aparece en el inicio. |
 | `orden` | `smallint` | NOT NULL, DEFAULT 0 | Orden dentro de la categoría. |
 | `seo_titulo`, `seo_descripcion` | `text` | | Metadatos para buscadores y redes sociales. |
 | `publicado_en` | `timestamptz` | | Fecha de la primera publicación. |
 
-**`producto_medios`**: fotos, videos y modelos 3D propios del producto (F2, F4).
+**`producto_medios`**: fotos y videos propios del producto (F2, F4). Los modelos 3D llegan en la fase 2.
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
 | `id` | `uuid` | PK | Identificador. |
 | `producto_id` | `uuid` | FK → `productos.id`, NOT NULL, ON DELETE CASCADE | Producto al que pertenece. |
-| `tipo` | `tipo_medio` | NOT NULL | Imagen, video o modelo 3D. |
+| `tipo` | `tipo_medio` | NOT NULL | Imagen o video (modelo 3D en la fase 2). |
 | `ruta` | `text` | NOT NULL | Ruta en el bucket público de Storage. |
 | `texto_alt` | `text` | NOT NULL | Descripción para accesibilidad y SEO. |
 | `orden` | `smallint` | NOT NULL, DEFAULT 0 | Orden en la galería. |
@@ -1323,7 +1319,7 @@ stateDiagram-v2
 | `coleccion_productos.producto_id` | `uuid` | PK compuesta, FK → `productos.id`, ON DELETE CASCADE | Relación muchos a muchos. |
 | `coleccion_productos.orden` | `smallint` | NOT NULL, DEFAULT 0 | Orden dentro de la colección. |
 
-**`ocasiones`** y **`producto_ocasiones`**: ocasiones de regalo (cumpleaños, Día del Maestro, Navidad, agradecimiento) que filtran los productos en "Crea tu caja" y sugieren diseños de tarjeta. Es una relación muchos a muchos con PK compuesta (`producto_id`, `ocasion_id`). `ocasiones.nombre` y `ocasiones.slug` son UNIQUE.
+**`ocasiones`** y **`producto_ocasiones`** *(fase 2)*: ocasiones de regalo (cumpleaños, Día del Maestro, Navidad, agradecimiento) que filtran los productos en "Crea tu caja" y sugieren diseños de tarjeta. Es una relación muchos a muchos con PK compuesta (`producto_id`, `ocasion_id`). `ocasiones.nombre` y `ocasiones.slug` son UNIQUE.
 
 #### Contenido editable
 
@@ -1343,9 +1339,9 @@ stateDiagram-v2
 | `publicado_en` | `timestamptz` | | Última publicación. |
 | `actualizado_por` | `uuid` | FK → `administradores.user_id` | Última persona que la editó. |
 
-#### Caja de regalo, envíos y configuración
+#### Caja de regalo (fase 2), envíos y configuración
 
-**`tipos_caja`**: tamaños de caja para "Crea tu caja" (F12).
+**`tipos_caja`** *(fase 2)*: tamaños de caja para "Crea tu caja" (F12).
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1358,7 +1354,7 @@ stateDiagram-v2
 | `activo` | `boolean` | NOT NULL, DEFAULT true | Disponible en el configurador. |
 | `orden` | `smallint` | NOT NULL, DEFAULT 0 | Orden de presentación. |
 
-**`disenos_caja`**: diseños o acabados aplicables a cualquier tamaño de caja.
+**`disenos_caja`** *(fase 2)*: diseños o acabados aplicables a cualquier tamaño de caja.
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1368,7 +1364,7 @@ stateDiagram-v2
 | `recargo_centavos` | `int` | NOT NULL, DEFAULT 0, CHECK ≥ 0 | Costo adicional del diseño. |
 | `activo`, `orden` | `boolean`, `smallint` | NOT NULL | Disponibilidad y orden. |
 
-**`disenos_tarjeta`**: tarjetas para la dedicatoria escrita a mano.
+**`disenos_tarjeta`** *(fase 2)*: tarjetas para la dedicatoria escrita a mano.
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1477,7 +1473,7 @@ stateDiagram-v2
 | `expira_en` | `timestamptz` | | Límite para pagar. `pg_cron` pasa a `expirado` los pedidos vencidos y libera el stock. |
 | `pagado_en` | `timestamptz` | | Momento en que se aprobó el pago. |
 
-**`pedido_items`**: líneas del pedido. Una caja armada es una línea de tipo `caja` que agrupa líneas hijas de tipo `pieza_caja`, enlazadas con `item_padre_id` (relación de la tabla consigo misma).
+**`pedido_items`**: líneas del pedido. En la v1, todas las líneas son de tipo `producto`. En la fase 2, una caja armada será una línea de tipo `caja` que agrupa líneas hijas de tipo `pieza_caja`, enlazadas con `item_padre_id` (relación de la tabla consigo misma).
 
 | Atributo | Tipo | Restricciones | Descripción |
 |---|---|---|---|
@@ -1487,22 +1483,22 @@ stateDiagram-v2
 | `tipo` | `tipo_item` | NOT NULL | `producto` (suelto), `caja` o `pieza_caja`. |
 | `producto_id` | `uuid` | FK → `productos.id`, ON DELETE SET NULL | Producto vendido. Obligatorio para `producto` y `pieza_caja`. |
 | `modelo_base_id` | `uuid` | FK → `modelos_base.id`, ON DELETE SET NULL | Modelo base elegido. |
-| `tipo_caja_id`, `diseno_caja_id` | `uuid` | FK, obligatorios si `tipo = 'caja'` | Tamaño y diseño de la caja. |
-| `diseno_tarjeta_id` | `uuid` | FK → `disenos_tarjeta.id` | Tarjeta elegida para la caja. |
+| `tipo_caja_id`, `diseno_caja_id` | `uuid` | FK, obligatorios si `tipo = 'caja'` | Tamaño y diseño de la caja. Fase 2. |
+| `diseno_tarjeta_id` | `uuid` | FK → `disenos_tarjeta.id` | Tarjeta elegida para la caja. Fase 2. |
 | `nombre_snapshot` | `text` | NOT NULL | Nombre del producto o de la caja al momento de la compra. |
 | `cantidad` | `smallint` | NOT NULL, CHECK > 0 | Unidades. |
 | `precio_unitario_centavos` | `int` | NOT NULL, CHECK ≥ 0 | Copia del precio base vigente. |
 | `recargos_centavos` | `int` | NOT NULL, DEFAULT 0, CHECK ≥ 0 | Suma de los recargos de modelo, opciones, diseño de caja y tarjeta. |
 | `total_linea_centavos` | `int` | NOT NULL; CHECK (`= (precio_unitario + recargos) × cantidad`) | Total de la línea. |
-| `dedicatoria` | `text` | CHECK longitud ≤ 500 | Mensaje que Gaby escribe a mano. Solo en líneas de tipo `caja`. |
-| `firma` | `text` | CHECK longitud ≤ 80 | "De parte de". Solo en líneas de tipo `caja`. |
+| `dedicatoria` | `text` | CHECK longitud ≤ 500 | Mensaje que Gaby escribe a mano. Solo en líneas de tipo `caja`. Fase 2. |
+| `firma` | `text` | CHECK longitud ≤ 80 | "De parte de". Solo en líneas de tipo `caja`. Fase 2. |
 
 Restricciones de coherencia por tipo (CHECK):
 - **`producto`:** `producto_id` obligatorio y `item_padre_id` vacío.
 - **`caja`:** `tipo_caja_id` y `diseno_caja_id` obligatorios, y `item_padre_id` vacío.
 - **`pieza_caja`:** `item_padre_id` y `producto_id` obligatorios.
 
-`crear_pedido()` valida además que las piezas de una caja respeten su capacidad y su mínimo de piezas.
+En la fase 2, `crear_pedido()` validará además que las piezas de una caja respeten su capacidad y su mínimo de piezas.
 
 **`pedido_item_opciones`**: copia de cada personalización elegida en una línea.
 
@@ -1613,7 +1609,7 @@ El backend propio de la tienda son los endpoints `/api` de Astro, el BFF descrit
 
 | # | Endpoint | Cuándo se usa | Funcionalidad |
 |---|---|---|---|
-| 1 | `POST /api/pedidos` | Al pulsar "Pagar" en el checkout. | F5, F6, F12 |
+| 1 | `POST /api/pedidos` | Al pulsar "Pagar" en el checkout. | F3, F5, F6 |
 | 2 | `POST /api/pagos/payphone/confirmar` | Cuando Payphone devuelve al comprador a `/pago/respuesta`. | F5 |
 | 3 | `POST /api/pedidos/{token}/comprobante` | Cuando el comprador sube el comprobante de una transferencia. | F5 |
 
@@ -1669,8 +1665,8 @@ paths:
       summary: Crea un pedido a partir del carrito y los datos de entrega
       description: >
         Valida el cuerpo con Zod y llama a la función `crear_pedido()` de la base de datos. Esa
-        función recalcula precios, recargos, envío e IVA; valida stock, capacidad y mínimo
-        de piezas de cada caja; registra o actualiza al cliente en el CRM, y crea el pedido en
+        función recalcula precios, recargos, envío e IVA; valida stock y opciones de
+        personalización; registra o actualiza al cliente en el CRM, y crea el pedido en
         estado `pendiente_pago`. Según el método de pago, responde con los parámetros para la
         Cajita de Payphone o con los datos bancarios para transferir.
       parameters:
@@ -1690,8 +1686,8 @@ paths:
             schema:
               $ref: '#/components/schemas/CrearPedidoRequest'
             examples:
-              cajaYProducto:
-                summary: Un cuaderno personalizado y una caja armada, con envío a Guayaquil
+              pedidoConEnvio:
+                summary: Un cuaderno personalizado, un cuaderno mini y dos marcapáginas, con envío a Guayaquil
                 value:
                   items:
                     - tipo: producto
@@ -1703,19 +1699,14 @@ paths:
                           valor_texto: Sofía
                         - opcion_id: 2d4f6a8c-0e1b-4c3d-9e5f-6a7b8c9d0e1f
                           valor_opcion_id: 7e8f9a0b-1c2d-4e3f-8a4b-5c6d7e8f9a0b
-                    - tipo: caja
-                      tipo_caja_id: 3a5c7e9b-2d4f-4a6c-8e0b-1d3f5a7c9e2b
-                      diseno_caja_id: 8c0e2a4c-6e8a-4c2e-9a4c-6e8a0c2e4a6c
-                      diseno_tarjeta_id: 5b7d9f1b-3d5f-4b7d-8f1b-3d5f7b9d1f3b
-                      dedicatoria: "Para la mejor profe: gracias por enseñar con tanto cariño."
-                      firma: Tus alumnos de 3.º B
-                      piezas:
-                        - producto_id: 1e3a5c7e-9b1d-4f3a-8c5e-7a9c1e3a5c7e
-                          cantidad: 1
-                          personalizacion: []
-                        - producto_id: 4c6e8a0c-2e4a-4c6e-8a0c-2e4a6c8e0a2c
-                          cantidad: 2
-                          personalizacion: []
+                    - tipo: producto
+                      producto_id: 1e3a5c7e-9b1d-4f3a-8c5e-7a9c1e3a5c7e
+                      cantidad: 1
+                      personalizacion: []
+                    - tipo: producto
+                      producto_id: 4c6e8a0c-2e4a-4c6e-8a0c-2e4a6c8e0a2c
+                      cantidad: 2
+                      personalizacion: []
                   contacto:
                     nombre: María Fernanda Ortiz
                     email: mafer.ortiz@example.com
@@ -1734,7 +1725,7 @@ paths:
                     fecha_entrega_deseada: "2026-12-18"
                   metodo_pago: payphone
                   facturacion: null
-                  total_mostrado_centavos: 5350
+                  total_mostrado_centavos: 4400
                   turnstile_token: 0.AbCdEfGhIjKlMnOpQrStUvWxYz
       responses:
         '201':
@@ -1757,21 +1748,21 @@ paths:
                     estado: pendiente_pago
                     expira_en: "2026-12-10T15:42:00-05:00"
                     totales:
-                      subtotal_centavos: 4850
+                      subtotal_centavos: 3900
                       descuento_centavos: 0
                       envio_centavos: 500
-                      base_imponible_centavos: 4652
-                      iva_centavos: 698
+                      base_imponible_centavos: 3826
+                      iva_centavos: 574
                       tasa_iva: 15
-                      total_centavos: 5350
+                      total_centavos: 4400
                     pago:
                       metodo: payphone
                       payphone:
                         clientTransactionId: QB-2026-000123
-                        amount: 5350
-                        amountWithTax: 4652
+                        amount: 4400
+                        amountWithTax: 3826
                         amountWithoutTax: 0
-                        tax: 698
+                        tax: 574
                         currency: USD
                         reference: Pedido QB-2026-000123 · Quinde Blue
         '400':
@@ -1799,8 +1790,8 @@ paths:
                 mensaje: El total de tu pedido cambió. Revisa el nuevo total antes de pagar.
                 detalles:
                   - campo: total_mostrado_centavos
-                    valor_esperado: 5350
-                    valor_actual: 5600
+                    valor_esperado: 4400
+                    valor_actual: 4650
         '422':
           description: Una regla de negocio impide el pedido.
           content:
@@ -1808,12 +1799,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
               example:
-                codigo: CAPACIDAD_CAJA_EXCEDIDA
-                mensaje: Las piezas elegidas no caben en la caja mediana. Prueba con la caja grande.
+                codigo: CIUDAD_SIN_COBERTURA
+                mensaje: Por ahora no hacemos envíos a esta ciudad. Puedes elegir retiro en persona o escribirnos por WhatsApp.
                 detalles:
-                  - campo: items[1].piezas
-                    espacios_usados: 7
-                    capacidad: 6
+                  - campo: entrega.direccion.ciudad_id
         '429':
           $ref: '#/components/responses/DemasiadasSolicitudes'
 
@@ -1856,7 +1845,7 @@ paths:
                     estado_pedido: pagado
                     token_publico: 2b9f6c1e-8d4a-4f7e-9c3b-5a1d7e9f2c4b
                     pago:
-                      monto_centavos: 5350
+                      monto_centavos: 4400
                       marca_tarjeta: Visa
                       ultimos_digitos: "4242"
                       codigo_autorizacion: W1234567
@@ -2014,14 +2003,7 @@ components:
           minItems: 1
           maxItems: 20
           items:
-            oneOf:
-              - $ref: '#/components/schemas/ItemProducto'
-              - $ref: '#/components/schemas/ItemCaja'
-            discriminator:
-              propertyName: tipo
-              mapping:
-                producto: '#/components/schemas/ItemProducto'
-                caja: '#/components/schemas/ItemCaja'
+            $ref: '#/components/schemas/ItemProducto'
         contacto:
           $ref: '#/components/schemas/Contacto'
         entrega:
@@ -2052,6 +2034,7 @@ components:
         tipo:
           type: string
           const: producto
+          description: En la v1 todas las líneas son productos. El tipo `caja` llega en la fase 2.
         producto_id:
           type: string
           format: uuid
@@ -2063,62 +2046,6 @@ components:
           type: integer
           minimum: 1
           maximum: 20
-        personalizacion:
-          type: array
-          maxItems: 10
-          items:
-            $ref: '#/components/schemas/Personalizacion'
-
-    ItemCaja:
-      type: object
-      additionalProperties: false
-      required: [tipo, tipo_caja_id, diseno_caja_id, piezas]
-      properties:
-        tipo:
-          type: string
-          const: caja
-        tipo_caja_id:
-          type: string
-          format: uuid
-        diseno_caja_id:
-          type: string
-          format: uuid
-        diseno_tarjeta_id:
-          type: [string, 'null']
-          format: uuid
-          description: '`null` significa que la caja va sin tarjeta.'
-        dedicatoria:
-          type: [string, 'null']
-          maxLength: 500
-          description: >
-            Mensaje que Gaby escribe a mano. El límite efectivo es el `max_caracteres` de la
-            tarjeta elegida (300 por defecto). Vacío significa tarjeta en blanco.
-        firma:
-          type: [string, 'null']
-          maxLength: 80
-        piezas:
-          type: array
-          minItems: 1
-          maxItems: 30
-          items:
-            $ref: '#/components/schemas/PiezaCaja'
-
-    PiezaCaja:
-      type: object
-      additionalProperties: false
-      required: [producto_id, cantidad]
-      properties:
-        producto_id:
-          type: string
-          format: uuid
-          description: Debe ser un producto con `habilitado_caja = true`.
-        modelo_base_id:
-          type: [string, 'null']
-          format: uuid
-        cantidad:
-          type: integer
-          minimum: 1
-          maximum: 10
         personalizacion:
           type: array
           maxItems: 10
@@ -2450,9 +2377,6 @@ components:
             - VALIDACION
             - CAPTCHA_INVALIDO
             - PRODUCTO_NO_DISPONIBLE
-            - CAPACIDAD_CAJA_EXCEDIDA
-            - MINIMO_PIEZAS_NO_ALCANZADO
-            - DEDICATORIA_DEMASIADO_LARGA
             - CIUDAD_SIN_COBERTURA
             - PRECIO_CAMBIADO
             - PEDIDO_NO_ENCONTRADO
@@ -2524,14 +2448,13 @@ components:
   | Concepto | Centavos |
   |---|---|
   | Cuaderno A5 personalizado (1.800 + 200 por el nombre) | 2.000 |
-  | Caja mediana (800 + 150 por la tarjeta) | 950 |
   | Cuaderno mini | 900 |
   | Marcapáginas de madera (500 × 2) | 1.000 |
-  | **Subtotal** | **4.850** |
+  | **Subtotal** | **3.900** |
   | Envío a la zona Costa | 500 |
-  | **Total** | **5.350** |
+  | **Total** | **4.400** |
 
-  El IVA ya está incluido en los precios: el total se desglosa en 4.652 de base imponible y 698 de IVA al 15 %, que es lo que recibe Payphone. Los montos son ilustrativos. El MVP no acepta cupones: llegan con las promociones de la fase 2.
+  El IVA ya está incluido en los precios: el total se desglosa en 3.826 de base imponible y 574 de IVA al 15 %, que es lo que recibe Payphone. Los montos son ilustrativos. El MVP no acepta cupones: llegan con las promociones de la fase 2.
 - **Orden de validación:** primero el esquema (400), luego Turnstile (403), luego las reglas de negocio en `crear_pedido()` (422) y por último la comparación con `total_mostrado_centavos` (409). El pedido solo se crea si todo pasa, en una sola transacción.
 - **CRM:** si el correo ya existe, el pedido se asocia a ese cliente, pero **la respuesta no revela** si el correo era conocido. Así no se pueden descubrir los correos de los clientes.
 
@@ -2556,7 +2479,7 @@ La plantilla limita la especificación OpenAPI a tres endpoints. Estos dos compl
 
 ## 5. Historias de Usuario
 
-Las tres historias cubren el núcleo del MVP: armar una caja de regalo (la funcionalidad diferencial), comprar sin chat ni cuenta (el objetivo principal del producto) y que Gaby pueda publicar sola (la condición para que la tienda se mantenga viva).
+Las tres historias cubren el núcleo de la v1: personalizar un producto (como compra hoy la mayoría de los clientes), comprar sin chat ni cuenta (el objetivo principal del producto) y que Gaby pueda publicar sola (la condición para que la tienda se mantenga viva).
 
 **Convenciones:**
 
@@ -2580,86 +2503,78 @@ Las tres historias cubren el núcleo del MVP: armar una caja de regalo (la funci
 
 ---
 
-### Historia de Usuario 1 — Armar una caja de regalo
+### Historia de Usuario 1 — Personalizar un producto a partir de un modelo base
 
 > **Como** Mafer, compradora que busca un regalo para su profesora,
-> **quiero** armar una caja eligiendo yo las piezas, la caja y la dedicatoria, y ver el precio a medida que la armo,
+> **quiero** elegir un modelo base y personalizarlo con el nombre, el color y el tipo de hojas, viendo el resultado y el precio mientras lo hago,
 > **para** regalar algo personal sin tener que cotizarlo por chat.
 
 | Campo | Valor |
 |---|---|
-| Funcionalidad | F12 · Crea tu propia caja de regalo |
-| Prioridad | **Must** (es el diferencial de la tienda) |
-| Estimación | 8 puntos |
-| Dependencias | Tablas `tipos_caja`, `disenos_caja`, `disenos_tarjeta`, `productos` (`habilitado_caja`, `espacios_caja`) y `ocasiones` · motor de precios de `packages/shared` · `POST /api/pedidos` con ítems de tipo `caja` |
+| Funcionalidades | F3 · Personalizador por modelos base · F2 · Ficha de producto |
+| Prioridad | **Must** (la mayoría de los clientes parte de un diseño existente y pide cambios) |
+| Estimación | 5 puntos |
+| Dependencias | Tablas `productos`, `modelos_base`, `opciones_personalizacion` y `valores_opcion` · motor de precios de `packages/shared` · `POST /api/pedidos` |
 
-**Contexto:** hoy cada caja de regalo se cotiza pieza por pieza en el chat, lo que alarga la venta y le quita tiempo a Gaby. El configurador toma como referencia el *Build a Box* de Happy Box, adaptado a productos propios y personalizables.
+**Contexto:** según la entrevista, la mayoría de los clientes parte de un diseño existente y pide cambios, y hoy cada personalización se cotiza por chat. Gaby quiere que se personalice "sí o sí", pero sin personalizar cada detalle: siempre sobre modelos base y con opciones cerradas. Esta historia reemplaza a la de "Crea tu propia caja", que pasó a la fase 2 al concentrar la v1 en lo esencial.
 
 **Criterios de aceptación:**
 
 ```gherkin
-Escenario: Ver solo las piezas que se pueden incluir
-  Dado que estoy en "Crea tu propia caja"
-  Cuando filtro por la ocasión "Día del Maestro"
-  Entonces veo solo productos publicados, habilitados para caja, con stock y asociados a esa ocasión
-  Y cada pieza muestra foto, nombre, precio y cuántos espacios ocupa
+Escenario: Ver los modelos base del producto
+  Dado que estoy en la ficha de un cuaderno personalizable
+  Cuando pulso "Personalizar"
+  Entonces veo sus modelos base activos, con imagen, nombre y recargo si lo tienen
+  Y el primero aparece seleccionado
 
-Escenario: El subtotal y los espacios se actualizan al instante
-  Dado que elegí la caja mediana, con capacidad para 6 espacios
-  Cuando agrego 2 marcapáginas de madera de $5,00 que ocupan 1 espacio cada uno
-  Entonces el panel de la caja muestra las 2 piezas, "2 de 6 espacios" y el subtotal actualizado
-  Y un lector de pantalla anuncia el nuevo subtotal
+Escenario: Elegir opciones con el precio en vivo
+  Dado que elegí el modelo "Floral"
+  Cuando elijo el color de portada "Azul" y el tipo de hojas "Rayadas"
+  Entonces la vista previa muestra el modelo con mis elecciones
+  Y el precio se actualiza sumando los recargos
+  Y un lector de pantalla anuncia el nuevo precio
 
-Escenario: No se puede superar la capacidad de la caja
-  Dado que mi caja mediana tiene 6 de 6 espacios ocupados
-  Cuando intento agregar otra pieza
-  Entonces la pieza no se agrega
-  Y veo el mensaje "Tu caja está llena" con la opción de cambiar a la caja grande
-
-Escenario: Cambiar a una caja más pequeña en la que no caben las piezas
-  Dado que tengo 7 espacios ocupados en una caja grande
-  Cuando elijo la caja mediana, con capacidad para 6 espacios
-  Entonces el cambio no se aplica y veo cuántos espacios debo liberar
-
-Escenario: Personalizar solo las piezas que lo admiten
-  Dado que agregué un cuaderno mini personalizable y un marcapáginas que no lo es
-  Cuando llego al paso "Personaliza las piezas"
-  Entonces solo se me piden los campos del cuaderno mini (modelo base y nombre)
-  Y no puedo avanzar sin completar los campos obligatorios
-  Y el recargo de la personalización se suma al subtotal
-
-Escenario: Dedicatoria con límite de caracteres o tarjeta en blanco
-  Dado que elegí una tarjeta con un límite de 300 caracteres
-  Cuando escribo la dedicatoria
+Escenario: Texto con límite de caracteres
+  Dado que la opción "Nombre en la portada" admite 20 caracteres
+  Cuando escribo el nombre
   Entonces veo un contador de caracteres restantes y no puedo superar el límite
-  Y puedo marcar "Enviar la tarjeta en blanco" o elegir no incluir tarjeta
+  Y la vista previa muestra el texto
 
-Escenario: Revisar y agregar la caja al carrito
-  Dado que completé todos los pasos y mi caja cumple el mínimo de piezas
-  Cuando llego a "Revisa tu caja"
-  Entonces veo la vista previa con todas las piezas y el desglose: piezas, personalizaciones, caja y tarjeta
-  Y al pulsar "Agregar al carrito" la caja aparece como una sola línea que puedo volver a editar
+Escenario: Opciones obligatorias
+  Dado que no completé una opción obligatoria
+  Cuando pulso "Agregar al carrito"
+  Entonces el producto no se agrega, el foco va a la opción pendiente y veo qué falta
 
-Escenario: No perder la caja si se recarga la página
-  Dado que estoy armando una caja
+Escenario: Agregar al carrito y editar
+  Dado que completé todas las opciones
+  Cuando pulso "Agregar al carrito"
+  Entonces el producto aparece en el carrito con el resumen de lo elegido
+  Y desde el carrito puedo volver a editar la personalización
+
+Escenario: No perder la personalización si se recarga la página
+  Dado que estoy personalizando un producto
   Cuando recargo la página o vuelvo más tarde desde el mismo navegador
-  Entonces la caja sigue como la dejé
+  Entonces la personalización sigue como la dejé
 
-Escenario: Una pieza se agota mientras armo la caja
-  Dado que tengo en mi caja una pieza que se acaba de agotar
-  Cuando avanzo de paso o voy al carrito
-  Entonces veo un aviso que me pide quitarla o reemplazarla antes de pagar
+Escenario: Una opción deja de estar disponible
+  Dado que tengo en el carrito un producto con un modelo o un valor que Gaby acaba de desactivar
+  Cuando voy al checkout
+  Entonces veo un aviso que me pide elegir otra opción antes de pagar
+
+Escenario: Sin diseños desde cero
+  Cuando reviso las opciones del personalizador
+  Entonces no hay forma de subir un diseño propio ni de pedir algo fuera de los modelos base
+  Y si necesito algo especial, veo el acceso discreto de contacto (F7)
 ```
 
 **Reglas de negocio:**
-- Solo entran productos propios marcados como habilitados para caja.
-- La suma de `espacios_caja × cantidad` no puede superar la capacidad de la caja, y la caja debe tener al menos `min_piezas`.
+- Solo se muestran modelos base y valores activos.
 - El precio que se ve en pantalla es informativo: el precio que se cobra lo recalcula `crear_pedido()` en la base de datos.
-- En el celular, el panel de la caja es una barra inferior desplegable con el subtotal y el botón "Siguiente".
+- En el celular, el precio y el botón "Agregar al carrito" quedan en una barra de compra fija.
 
-**Fuera de alcance (fase 2):** varias cajas en un mismo pedido, tarjeta con logo para pedidos corporativos y cajas sugeridas por ocasión.
+**Fuera de alcance:** subir diseños propios; visor 3D (fase 2); personalizar piezas dentro de una caja de regalo (fase 2, con "Crea tu propia caja").
 
-**Métrica de éxito:** al menos el 40 % de las cajas iniciadas llegan al carrito, y la mediana de tiempo para armar una caja es menor a 4 minutos.
+**Métrica de éxito:** al menos el 50 % de quienes abren el personalizador agregan el producto al carrito, y bajan los chats para cotizar personalizaciones.
 
 ---
 
@@ -2788,10 +2703,9 @@ Escenario: Subir y ordenar fotos y videos
   Entonces se suben, puedo ordenarlos arrastrándolos y marcar una foto como portada
   Y cada medio exige un texto alternativo antes de publicar
 
-Escenario: Configurar el visor 3D
-  Cuando subo el modelo 3D del producto en formato GLB, de hasta 15 MB
-  Entonces la vista previa lo muestra en el visor, donde se puede girar y acercar
-  Y si no subo un modelo, el visor usa la secuencia de fotos que elija
+Escenario: Configurar el visor interactivo
+  Cuando elijo las fotos del visor, por ejemplo el cuaderno abierto página por página
+  Entonces la vista previa permite recorrerlas como una secuencia
 
 Escenario: Configurar la personalización
   Dado que marqué el producto como personalizable
@@ -2830,13 +2744,9 @@ Escenario: Editar un producto ya publicado
 
 Escenario: Retirar un producto
   Cuando archivo un producto publicado
-  Entonces desaparece de la tienda, de su categoría y del configurador de cajas
+  Entonces desaparece de la tienda y de su categoría
   Y los pedidos anteriores que lo incluyen no cambian
   Y su antigua URL muestra "Este producto ya no está disponible" con sugerencias de la misma categoría
-
-Escenario: Habilitar el producto para cajas de regalo
-  Cuando marco "Disponible para cajas" sin indicar cuántos espacios ocupa
-  Entonces el panel no me deja guardar hasta que lo indique
 ```
 
 **Reglas de negocio:**
@@ -2844,7 +2754,7 @@ Escenario: Habilitar el producto para cajas de regalo
 - Las secciones de la ficha son fijas en orden y diseño: Gaby edita su contenido, no su estructura. Cada sección se valida con su esquema Zod.
 - Las imágenes se optimizan automáticamente al servirlas; Gaby no necesita redimensionarlas.
 
-**Fuera de alcance:** editor por bloques para reordenar o agregar secciones (fase 2), cambiar colores y tipografías desde el panel, programar la publicación para una fecha (llega con los lanzamientos, fase 2), historial de versiones y realidad aumentada en el visor.
+**Fuera de alcance:** editor por bloques para reordenar o agregar secciones (fase 2), visor 3D y configuración de productos para cajas de regalo (fase 2), cambiar colores y tipografías desde el panel, programar la publicación para una fecha (llega con los lanzamientos, fase 2), historial de versiones y realidad aumentada.
 
 **Métrica de éxito:** en una prueba de usabilidad, Gaby publica un producto completo (fotos, personalización y ficha) en menos de 15 minutos y sin ayuda.
 
@@ -2858,11 +2768,11 @@ Los tres tickets salen de las historias de la sección 5 y siguen el orden en qu
 |---|---|---|---|
 | **QB-12** | Base de datos | HU1 · HU2a | Tablas de pedidos y la función `crear_pedido()`, que valida y calcula todo el pedido. |
 | **QB-21** | Backend | HU2b | Carga del comprobante de transferencia y funciones para registrarlo y revisarlo. |
-| **QB-34** | Frontend | HU1 | Isla interactiva "Crea tu propia caja". |
+| **QB-34** | Frontend | HU1 | Isla interactiva del personalizador de productos. |
 
 **Convenciones de los tickets:**
 - **Ramas:** `tipo/QB-XX-descripcion-corta`, por ejemplo `feat/QB-12-crear-pedido`.
-- **Commits:** formato *Conventional Commits* con el ID del ticket, por ejemplo `feat(db): crear_pedido valida capacidad de cajas [QB-12]`.
+- **Commits:** formato *Conventional Commits* con el ID del ticket, por ejemplo `feat(db): crear_pedido valida opciones de personalización [QB-12]`.
 - **Estimación:** puntos de historia y horas de referencia.
 - **Definición de terminado:** la misma de la sección 5, más lo específico de cada ticket.
 
@@ -2873,12 +2783,12 @@ Los tres tickets salen de las historias de la sección 5 y siguen el orden en qu
 | Campo | Valor |
 |---|---|
 | Tipo | Base de datos |
-| Historias | HU1 · Armar una caja de regalo · HU2a · Contacto y entrega |
+| Historias | HU1 · Personalizar un producto · HU2a · Contacto y entrega |
 | Prioridad | Crítica: sin esta función no se pueden crear pedidos (`POST /api/pedidos`) ni registrar comprobantes (QB-21) |
 | Estimación | 5 puntos (unas 12 horas) |
 | Rama | `feat/QB-12-crear-pedido` |
 | Etiquetas | `database`, `supabase`, `pedidos`, `seguridad` |
-| Depende de | Migraciones previas del catálogo y de las cajas (`productos`, `modelos_base`, `opciones_personalizacion`, `tipos_caja`, `disenos_caja`, `disenos_tarjeta`) y de clientes y envíos (`clientes`, `ciudades`, `zonas_envio`, `configuracion_tienda`) |
+| Depende de | Migraciones previas del catálogo (`productos`, `modelos_base`, `opciones_personalizacion`, `valores_opcion`) y de clientes y envíos (`clientes`, `ciudades`, `zonas_envio`, `configuracion_tienda`) |
 
 **Objetivo:** crear las tablas del pedido y una función de base de datos que reciba el carrito, lo valide por completo y cree el pedido con precios calculados en el servidor. Es la única forma de crear pedidos: el navegador nunca envía precios (secciones 2.5 y 4).
 
@@ -2901,7 +2811,7 @@ supabase/migrations/20261103120100_fn_crear_pedido.sql      # función crear_ped
 supabase/tests/pedidos/crear_pedido.test.sql                # tests pgTAP
 packages/shared/fixtures/casos-precio.json                  # casos de precio compartidos (se escriben primero)
 supabase/tests/fixtures/casos_precio.sql                    # generado desde el JSON con npm run fixtures:sql
-supabase/seed.sql                                            # agregar 1 caja, 3 piezas y 2 ciudades de prueba
+supabase/seed.sql                                            # agregar 3 productos personalizables y 2 ciudades de prueba
 packages/shared/src/database.types.ts                        # regenerado con supabase gen types
 ```
 
@@ -2922,16 +2832,15 @@ packages/shared/src/database.types.ts                        # regenerado con su
    1. **Idempotencia:** si ya existe un pedido con `idempotency_key = p_idempotency_key`, devolver ese pedido sin crear nada.
    2. **Configuración:** leer `configuracion_tienda` (tasa de IVA, si los precios incluyen IVA, plazos de expiración).
    3. **Cliente:** buscar el cliente por correo (`citext`) o crearlo con `origen = 'web'`. Completar el teléfono solo si estaba vacío. Si `acepta_marketing` es verdadero, guardar el consentimiento y la fecha; nunca desmarcar un consentimiento previo desde el checkout.
-   4. **Productos sueltos:** el producto debe estar publicado y tener stock (o ser bajo pedido). El modelo base debe pertenecer al producto y estar activo; es obligatorio si el producto es personalizable. Cada opción debe ser del producto, las obligatorias deben estar presentes y los textos no pueden superar `max_caracteres`. Precio de la línea = precio base + recargos de modelo, opciones y valores.
-   5. **Cajas:** el tipo de caja, el diseño y la tarjeta deben estar activos. Cada pieza debe tener `habilitado_caja = true`, con las mismas validaciones del paso 4. La suma de `espacios_caja × cantidad` no puede superar `capacidad_espacios`, el número de piezas debe llegar a `min_piezas` y la dedicatoria no puede superar el `max_caracteres` de la tarjeta.
-   6. **Envío:** si es envío, la ciudad debe estar activa y su zona define el costo. Si es retiro, el costo es 0.
-   7. **Totales:** subtotal, descuento (siempre 0 en el MVP; los cupones llegan en la fase 2), envío y total. Si los precios incluyen IVA: `base = round(total / (1 + tasa / 100))` e `iva = total − base`.
-   8. **Precio cambiado:** si viene `total_mostrado_centavos` y no coincide con el total calculado, cancelar con `PRECIO_CAMBIADO`, indicando ambos valores.
-   9. **Stock:** bloquear las filas con `select … for update` y descontar el stock de los productos que lo controlan.
-   10. **Insertar:** crear el pedido con el código `'QB-' || año || '-' || lpad(nextval('pedido_codigo_seq')::text, 6, '0')` y `expira_en` según el método de pago. Luego las líneas (las piezas enlazadas a su caja con `item_padre_id`) y las opciones, todo con copias de nombres y precios.
-   11. **Respuesta:** devolver un `jsonb` con `codigo`, `token_publico`, `estado`, `expira_en`, `totales` y los parámetros de pago (sección 4, `PedidoCreado`).
+   4. **Productos:** el producto debe estar publicado y tener stock (o ser bajo pedido). El modelo base debe pertenecer al producto y estar activo; es obligatorio si el producto es personalizable. Cada opción debe ser del producto, las obligatorias deben estar presentes y los textos no pueden superar `max_caracteres`. Precio de la línea = precio base + recargos de modelo, opciones y valores.
+   5. **Envío:** si es envío, la ciudad debe estar activa y su zona define el costo. Si es retiro, el costo es 0.
+   6. **Totales:** subtotal, descuento (siempre 0 en el MVP; los cupones llegan en la fase 2), envío y total. Si los precios incluyen IVA: `base = round(total / (1 + tasa / 100))` e `iva = total − base`.
+   7. **Precio cambiado:** si viene `total_mostrado_centavos` y no coincide con el total calculado, cancelar con `PRECIO_CAMBIADO`, indicando ambos valores.
+   8. **Stock:** bloquear las filas con `select … for update` y descontar el stock de los productos que lo controlan.
+   9. **Insertar:** crear el pedido con el código `'QB-' || año || '-' || lpad(nextval('pedido_codigo_seq')::text, 6, '0')` y `expira_en` según el método de pago. Luego las líneas y sus opciones, todo con copias de nombres y precios.
+   10. **Respuesta:** devolver un `jsonb` con `codigo`, `token_publico`, `estado`, `expira_en`, `totales` y los parámetros de pago (sección 4, `PedidoCreado`).
 
-3. **Errores de negocio:** se lanzan con `raise exception using errcode = 'P0001', message = '<CODIGO>', detail = '<json>'`. El BFF traduce `message` al código de error de la API y `detail` al arreglo `detalles`. Códigos: `PRODUCTO_NO_DISPONIBLE`, `CAPACIDAD_CAJA_EXCEDIDA`, `MINIMO_PIEZAS_NO_ALCANZADO`, `DEDICATORIA_DEMASIADO_LARGA`, `CIUDAD_SIN_COBERTURA`, `PRECIO_CAMBIADO` y `VALIDACION`.
+3. **Errores de negocio:** se lanzan con `raise exception using errcode = 'P0001', message = '<CODIGO>', detail = '<json>'`. El BFF traduce `message` al código de error de la API y `detail` al arreglo `detalles`. Códigos: `PRODUCTO_NO_DISPONIBLE`, `CIUDAD_SIN_COBERTURA`, `PRECIO_CAMBIADO` y `VALIDACION`.
 
 4. **RLS:**
    - Visitantes y clientes sin cuenta: sin acceso directo a las cuatro tablas.
@@ -2941,9 +2850,9 @@ packages/shared/src/database.types.ts                        # regenerado con su
 **Criterios de aceptación:**
 - [ ] Las migraciones se aplican sin errores sobre una base vacía (`supabase db reset`) y en la CI.
 - [ ] Todos los casos de `casos-precio.json` pasan, incluido el redondeo del IVA.
-- [ ] Un pedido válido con un producto suelto y una caja de 3 piezas devuelve los totales correctos, incluido el desglose de IVA.
+- [ ] Un pedido válido con un producto personalizado y dos productos sin personalizar devuelve los totales correctos, incluido el desglose de IVA.
 - [ ] Repetir la llamada con la misma `p_idempotency_key` devuelve el mismo pedido y no descuenta stock dos veces.
-- [ ] Cada regla del paso 5 rechaza el pedido con su código de error y no deja filas a medias.
+- [ ] Cada regla de validación de los pasos 4 y 5 rechaza el pedido con su código de error y no deja filas a medias.
 - [ ] Un precio manipulado en el payload no tiene efecto, porque la función ignora cualquier precio recibido.
 - [ ] Los roles `anon` y `authenticated` no pueden ejecutar la función ni insertar directamente en las tablas.
 - [ ] La función responde en menos de 300 ms con 20 líneas, medido con `explain analyze` en local.
@@ -2952,19 +2861,18 @@ packages/shared/src/database.types.ts                        # regenerado con su
 
 | # | Caso | Resultado esperado |
 |---|---|---|
-| 1 | Pedido válido con producto y caja | Pedido creado, totales e IVA correctos |
+| 1 | Pedido válido con un producto personalizado y otros sin personalizar | Pedido creado, totales e IVA correctos |
 | 2 | Misma clave de idempotencia dos veces | Mismo `codigo`, stock descontado una sola vez |
-| 3 | Piezas que superan la capacidad de la caja | `CAPACIDAD_CAJA_EXCEDIDA` |
-| 4 | Caja con menos piezas que el mínimo | `MINIMO_PIEZAS_NO_ALCANZADO` |
-| 5 | Pieza no habilitada para caja | `PRODUCTO_NO_DISPONIBLE` |
+| 3 | Modelo base que no pertenece al producto o está inactivo | `VALIDACION` |
+| 4 | Falta una opción obligatoria | `VALIDACION` |
+| 5 | Texto más largo que el `max_caracteres` de la opción | `VALIDACION` |
 | 6 | Producto sin stock o en borrador | `PRODUCTO_NO_DISPONIBLE` |
-| 7 | Dedicatoria más larga que el límite de la tarjeta | `DEDICATORIA_DEMASIADO_LARGA` |
-| 8 | Ciudad inactiva | `CIUDAD_SIN_COBERTURA` |
-| 9 | `total_mostrado_centavos` distinto | `PRECIO_CAMBIADO` con ambos valores |
-| 10 | Precio incluido en el payload | Se ignora; se cobra el precio de la base de datos |
-| 11 | Ejecución como `anon` o `authenticated` | Permiso denegado |
-| 12 | Cliente con cuenta lee pedidos de otro cliente | 0 filas |
-| 13 | Cada caso de `casos-precio.json` | Los totales coinciden con los esperados, incluido el redondeo del IVA |
+| 7 | Ciudad inactiva | `CIUDAD_SIN_COBERTURA` |
+| 8 | `total_mostrado_centavos` distinto | `PRECIO_CAMBIADO` con ambos valores |
+| 9 | Precio incluido en el payload | Se ignora; se cobra el precio de la base de datos |
+| 10 | Ejecución como `anon` o `authenticated` | Permiso denegado |
+| 11 | Cliente con cuenta (fase 2) lee pedidos de otro cliente | 0 filas |
+| 12 | Cada caso de `casos-precio.json` | Los totales coinciden con los esperados, incluido el redondeo del IVA |
 
 **Notas:** se trabaja con tests primero: los casos de precio y los tests pgTAP se escriben antes que la función. Documentar en el pull request el plan de reversión de la migración. Las tablas son nuevas, así que se pueden eliminar sin afectar datos existentes.
 
@@ -3059,89 +2967,84 @@ apps/tienda/tests/api/comprobante.test.ts                  # tests de integraci�
 
 ---
 
-### Ticket 3 — QB-34 · Isla interactiva "Crea tu propia caja"
+### Ticket 3 — QB-34 · Isla interactiva del personalizador
 
 | Campo | Valor |
 |---|---|
 | Tipo | Frontend |
-| Historia | HU1 · Armar una caja de regalo |
-| Prioridad | Alta: es la funcionalidad diferencial |
-| Estimación | 8 puntos (unas 20 horas) |
-| Rama | `feat/QB-34-crea-tu-caja` |
+| Historia | HU1 · Personalizar un producto a partir de un modelo base |
+| Prioridad | Alta: la mayoría de los clientes compra a partir de un modelo base |
+| Estimación | 5 puntos (unas 14 horas) |
+| Rama | `feat/QB-34-personalizador` |
 | Etiquetas | `frontend`, `astro`, `react`, `accesibilidad`, `mobile` |
-| Depende de | Tablas de cajas y piezas con datos de prueba · motor de precios `calcularCaja()` en `packages/shared` · store del carrito con soporte para líneas de tipo `caja` · **wireframes de "Crea tu caja", pendientes en la sección 1.3: el ticket queda bloqueado hasta que Gaby los apruebe** |
+| Depende de | Tablas de catálogo con modelos y opciones de prueba · motor de precios `calcularLinea()` en `packages/shared` · store del carrito · **wireframes del personalizador, pendientes en la sección 1.3: el ticket queda bloqueado hasta que Gaby los apruebe** |
 
-**Objetivo:** construir la página `/crea-tu-caja` con una isla React que guía al comprador por los cinco pasos de la F12, con el panel de la caja y el subtotal siempre visibles, y que agrega la caja al carrito como una sola línea editable.
+**Objetivo:** construir la isla React del personalizador en la ficha de producto (F3). El comprador elige un modelo base y sus opciones, ve una vista previa y el precio actualizado, y agrega el producto al carrito como una línea editable.
 
 **Alcance:**
 
 | Incluye | No incluye |
 |---|---|
-| Página Astro que carga los datos en el servidor | Varias cajas por pedido (fase 2) |
-| Isla con los 5 pasos, el panel de la caja y la vista previa | Cajas sugeridas por ocasión (fase 2) |
-| Store persistente de la caja en curso | El checkout (HU2) |
-| Edición de una caja ya agregada al carrito | Animaciones 3D de la caja |
-| Versión móvil con barra inferior | |
+| Isla montada en la ficha de producto, con los datos cargados en el servidor | Visor 3D (fase 2) |
+| Selección de modelo base y opciones de tipo selección, color y texto, con vista previa y precio en vivo | "Crea tu propia caja" (fase 2) |
+| Store persistente de la personalización en curso | El checkout (HU2) |
+| Agregar al carrito y editar desde el carrito | |
+| Barra de compra fija en el celular | |
 | Tests de componentes y E2E | |
 
 **Archivos:**
 
 ```
-apps/tienda/src/pages/crea-tu-caja.astro                 # carga del catálogo apto para cajas (SSR)
-apps/tienda/src/islands/CreaTuCaja/CreaTuCaja.tsx        # contenedor y navegación entre pasos
-apps/tienda/src/islands/CreaTuCaja/PasoPiezas.tsx        # filtro por ocasión y grilla de piezas
-apps/tienda/src/islands/CreaTuCaja/PasoPersonalizar.tsx  # campos de las piezas personalizables
-apps/tienda/src/islands/CreaTuCaja/PasoCaja.tsx          # tamaño y diseño de la caja
-apps/tienda/src/islands/CreaTuCaja/PasoDedicatoria.tsx   # tarjeta, mensaje con contador y firma
-apps/tienda/src/islands/CreaTuCaja/PasoRevision.tsx      # vista previa y desglose
-apps/tienda/src/islands/CreaTuCaja/PanelCaja.tsx         # panel lateral (escritorio) o barra inferior (móvil)
-apps/tienda/src/stores/caja.ts                           # estado de la caja en curso (nanostores, persistente)
-apps/tienda/tests/islands/CreaTuCaja.test.tsx            # tests de componentes
-tests/e2e/crea-tu-caja.spec.ts                           # recorrido completo en móvil y escritorio
+apps/tienda/src/pages/producto/[slug].astro                 # carga del producto, modelos y opciones (SSR)
+apps/tienda/src/islands/Personalizador/Personalizador.tsx   # contenedor de la isla
+apps/tienda/src/islands/Personalizador/SelectorModelo.tsx   # modelos base
+apps/tienda/src/islands/Personalizador/CampoOpcion.tsx      # selección, color o texto según el tipo de opción
+apps/tienda/src/islands/Personalizador/VistaPrevia.tsx      # imagen del modelo con las elecciones
+apps/tienda/src/islands/Personalizador/BarraCompra.tsx      # precio y botón (fija en el celular)
+apps/tienda/src/stores/personalizacion.ts                   # personalización en curso (nanostores, persistente)
+apps/tienda/tests/islands/Personalizador.test.tsx           # tests de componentes
+tests/e2e/personalizador.spec.ts                            # recorrido completo en móvil y escritorio
 ```
 
 **Detalle técnico:**
 
-1. **Datos (SSR):** `crea-tu-caja.astro` consulta en el servidor las piezas publicadas y habilitadas para caja (con stock, espacios, precio, medios, modelos y opciones), los tipos y diseños de caja activos, las tarjetas y las ocasiones. Los pasa como props a la isla, montada con `client:load` porque es el contenido principal de la página.
-2. **Estado:** `stores/caja.ts` usa `persistentMap` de `@nanostores/persistent` con la clave `qb-caja-en-curso` y guarda solo identificadores, cantidades, opciones y textos; nunca precios. Expone acciones puras y testeables: `agregarPieza`, `quitarPieza`, `cambiarCantidad`, `elegirCaja`, `personalizar`, `escribirDedicatoria` y `reiniciar`.
-3. **Precio y capacidad:** cada cambio recalcula con `calcularCaja()` del paquete compartido, que devuelve el subtotal, el desglose, los espacios usados y los errores. Es la misma lógica que replica `crear_pedido()` en la base de datos, y las dos se prueban contra `casos-precio.json`.
+1. **Datos (SSR):** `producto/[slug].astro` carga el producto publicado con sus modelos base activos y sus opciones con valores activos, y los pasa como props a la isla. La isla se monta con `client:idle`, para no competir con la carga de la galería, que es lo primero que ve el comprador.
+2. **Estado:** `stores/personalizacion.ts` usa `persistentMap` de `@nanostores/persistent` con la clave `qb-personalizacion-{productoId}` y guarda solo identificadores y textos; nunca precios. Expone acciones puras y testeables: `elegirModelo`, `elegirValor`, `escribirTexto` y `reiniciar`.
+3. **Precio:** cada cambio recalcula con `calcularLinea()` del paquete compartido (precio base más los recargos de modelo, opciones y valores). Es la misma lógica que replica `crear_pedido()` en la base de datos, y las dos se prueban contra `casos-precio.json`.
 4. **Reglas en la interfaz:**
-   - El botón "Agregar" se deshabilita cuando la pieza no cabe, con el mensaje "Tu caja está llena" y un acceso para cambiar a una caja mayor.
-   - No se puede elegir una caja menor si las piezas no caben; se indica cuántos espacios hay que liberar.
-   - No se avanza de paso si faltan campos obligatorios; el foco va al primer campo con error.
-   - El contador de la dedicatoria usa el `max_caracteres` de la tarjeta elegida.
-5. **Validación final:** antes de agregar al carrito, validar con el esquema Zod `ItemCaja` de la sección 4, para que el payload que llegue a `POST /api/pedidos` sea válido.
-6. **Carrito:** "Agregar al carrito" crea una línea de tipo `caja` en el store del carrito con un `lineaId` y reinicia la caja en curso. "Editar" desde el carrito abre `/crea-tu-caja?editar={lineaId}` con la caja cargada.
-7. **Diseño adaptable:**
-   - Desde 1024 px, `PanelCaja` es una columna fija a la derecha.
-   - En pantallas menores, es una barra inferior fija con el subtotal, los espacios y "Siguiente", y se despliega como hoja inferior para ver las piezas.
-   - El indicador "Paso X de 5" está siempre visible.
-8. **Accesibilidad:**
-   - El subtotal y los espacios se anuncian con `aria-live="polite"`.
-   - Al cambiar de paso, el foco se mueve al título del paso.
-   - Todo funciona con teclado, la hoja inferior atrapa el foco mientras está abierta y los controles de cantidad tienen etiquetas accesibles.
-9. **Rendimiento:**
-   - El JavaScript de la isla pesa como máximo 60 KB comprimido.
-   - Las imágenes de las piezas usan `loading="lazy"` y tamaños responsivos.
-   - LCP menor a 2,5 s en móvil con 4G simulado.
-10. **Estados:** cargando, sin piezas disponibles para la ocasión elegida y pieza agotada (aviso con opción de quitarla).
+   - No se agrega al carrito si falta una opción obligatoria; el foco va a la primera opción pendiente.
+   - Los textos muestran un contador con el `max_caracteres` de la opción.
+   - Los modelos y valores inactivos no se muestran.
+5. **Vista previa:** muestra la imagen del modelo base, una muestra del color elegido y el texto en un recuadro. Es una referencia para el comprador, no una representación exacta del producto terminado, y así se indica.
+6. **Validación final:** antes de agregar al carrito, validar con el esquema Zod `ItemProducto` de la sección 4, para que el payload que llegue a `POST /api/pedidos` sea válido.
+7. **Carrito:** "Agregar al carrito" crea una línea de tipo `producto` con un `lineaId`. "Editar" desde el carrito abre la ficha con `?editar={lineaId}` y la personalización cargada.
+8. **Diseño adaptable:** en escritorio, el personalizador va junto a la galería. En el celular, el precio y "Agregar al carrito" van en una barra inferior fija, el patrón que el benchmark de fichas identificó como diferencial.
+9. **Accesibilidad:**
+   - El precio se anuncia con `aria-live="polite"`.
+   - Los modelos y valores son grupos de opciones con etiquetas accesibles.
+   - Todo funciona con teclado.
+10. **Rendimiento:**
+    - El JavaScript de la isla pesa como máximo 40 KB comprimido.
+    - Las imágenes de los modelos usan `loading="lazy"` y tamaños responsivos.
+    - LCP de la ficha menor a 2,5 s en móvil con 4G simulado.
+11. **Estados:** producto no personalizable (la isla no se muestra), valor desactivado y error al cargar los datos.
 
 **Criterios de aceptación:**
-- [ ] Se cumplen los 9 escenarios de la HU1 (sección 5).
-- [ ] `calcularCaja()` pasa todos los casos de `casos-precio.json`, los mismos que valida `crear_pedido()` en la base de datos.
-- [ ] La caja en curso sobrevive a una recarga, y una caja del carrito se puede editar y volver a guardar.
+- [ ] Se cumplen los 8 escenarios de la HU1 (sección 5).
+- [ ] `calcularLinea()` pasa todos los casos de `casos-precio.json`, los mismos que valida `crear_pedido()` en la base de datos.
+- [ ] La personalización sobrevive a una recarga, y una línea del carrito se puede editar y volver a guardar.
 - [ ] Funciona en Chrome Android (375 px), Safari iOS y escritorio.
-- [ ] Lighthouse en móvil: rendimiento de 90 o más y accesibilidad de 95 o más; sin errores de axe.
-- [ ] El tamaño de la isla está dentro del presupuesto de 60 KB.
+- [ ] Lighthouse en móvil sobre la ficha: rendimiento de 90 o más y accesibilidad de 95 o más; sin errores de axe.
+- [ ] El tamaño de la isla está dentro del presupuesto de 40 KB.
 
 **Tests:**
 
 | Tipo | Caso |
 |---|---|
-| Componentes (Vitest + Testing Library) | Agregar piezas actualiza el subtotal y los espacios · el botón se deshabilita con la caja llena · no se puede cambiar a una caja menor si no caben las piezas · el contador de la dedicatoria respeta el límite · no se avanza con campos obligatorios vacíos · el estado se restaura desde el almacenamiento |
-| E2E (Playwright, móvil y escritorio) | Recorrido completo: filtrar por ocasión, agregar 3 piezas, personalizar una, elegir caja, escribir dedicatoria, revisar y agregar al carrito · editar la caja desde el carrito · recargar en mitad del recorrido y continuar |
+| Componentes (Vitest + Testing Library) | Elegir modelo y valores actualiza el precio · el contador respeta el límite de caracteres · no se agrega al carrito con opciones obligatorias vacías · los valores inactivos no aparecen · el estado se restaura desde el almacenamiento |
+| E2E (Playwright, móvil y escritorio) | Recorrido completo: abrir la ficha, personalizar, agregar al carrito, editar desde el carrito y recargar en mitad del recorrido |
 
-**Diseño:** se implementa a partir de los wireframes de "Crea tu caja", hoy pendientes (sección 1.3). El ticket no se inicia hasta que Gaby los apruebe, para no improvisar la interfaz.
+**Diseño:** se implementa a partir de los wireframes del personalizador, hoy pendientes (sección 1.3). El ticket no se inicia hasta que Gaby los apruebe, para no improvisar la interfaz.
 
 ---
 
@@ -3195,20 +3098,20 @@ Qué puede fallar y cómo se revierte.
 
 | Campo | Valor |
 |---|---|
-| Título | `feat(db): tablas de pedidos y función crear_pedido con validación de cajas [QB-12]` |
+| Título | `feat(db): tablas de pedidos y función crear_pedido con validación de personalización [QB-12]` |
 | Rama | `feat/QB-12-crear-pedido` → `main` |
 | Ticket | QB-12 · Base de datos · HU1 y HU2a |
 | Estado | Planificada |
 | Etiquetas | `database`, `supabase`, `seguridad` |
 
-**Qué cambia:** agrega el modelo de pedidos (sección 3) y la función `crear_pedido()`, que se convierte en la única forma de crear un pedido. La función recalcula precios, valida productos, cajas y envío, calcula el IVA y reserva el stock en una sola transacción, así que un pedido nunca queda a medias ni con precios enviados desde el navegador.
+**Qué cambia:** agrega el modelo de pedidos (sección 3) y la función `crear_pedido()`, que se convierte en la única forma de crear un pedido. La función recalcula precios, valida productos, personalización y envío, calcula el IVA y reserva el stock en una sola transacción, así que un pedido nunca queda a medias ni con precios enviados desde el navegador.
 
 **Cambios principales:**
 - `supabase/migrations/20261103120000_pedidos_tablas.sql`: cinco tipos enumerados; las tablas `pedidos`, `pedido_items`, `pedido_item_opciones` y `pagos`, con sus CHECK, índices únicos parciales (un solo pago aprobado por pedido) y claves foráneas; la secuencia `pedido_codigo_seq`, y RLS con sus políticas.
 - `supabase/migrations/20261103120100_fn_crear_pedido.sql`: la función `crear_pedido(jsonb, uuid)` con `security definer` y `search_path` vacío, ejecutable solo por `service_role`.
 - `packages/shared/fixtures/casos-precio.json`: casos de precio compartidos con el frontend, escritos antes que la función.
-- `supabase/tests/pedidos/crear_pedido.test.sql`: 13 tests pgTAP, incluidos los casos de precio.
-- `supabase/seed.sql`: una caja, tres piezas y dos ciudades de prueba.
+- `supabase/tests/pedidos/crear_pedido.test.sql`: 12 tests pgTAP, incluidos los casos de precio.
+- `supabase/seed.sql`: tres productos personalizables y dos ciudades de prueba.
 - `packages/shared/src/database.types.ts`: tipos regenerados.
 
 **Decisiones para revisar:**
@@ -3222,7 +3125,7 @@ npm run db:reset    # supabase db reset: aplica migraciones y seed
 npm run fixtures:sql  # genera los casos de precio para pgTAP
 npm run db:test     # supabase test db: ejecuta los tests pgTAP
 ```
-Ejecutar `crear_pedido()` desde el editor SQL de Supabase local con el payload de ejemplo de la sección 4: debe devolver un total de 5.350 centavos, con 4.652 de base imponible y 698 de IVA.
+Ejecutar `crear_pedido()` desde el editor SQL de Supabase local con el payload de ejemplo de la sección 4: debe devolver un total de 4.400 centavos, con 3.826 de base imponible y 574 de IVA.
 
 **Riesgos y reversión:** las tablas son nuevas y ningún código las usa todavía, así que revertir es una migración que elimina la función, las tablas y los tipos (incluida en la descripción de la pull request). Riesgo principal: un error en el cálculo del IVA. Lo cubren los casos de `casos-precio.json`, los mismos que usa el motor de precios del frontend (QB-34).
 
@@ -3265,38 +3168,39 @@ Recorrido manual: crear un pedido con transferencia, subir una foto del comproba
 
 ---
 
-### Pull Request 3 — Isla "Crea tu propia caja"
+### Pull Request 3 — Isla del personalizador de productos
 
 | Campo | Valor |
 |---|---|
-| Título | `feat(tienda): configurador Crea tu propia caja con subtotal en vivo [QB-34]` |
-| Rama | `feat/QB-34-crea-tu-caja` → `main` |
+| Título | `feat(tienda): personalizador de productos con precio en vivo [QB-34]` |
+| Rama | `feat/QB-34-personalizador` → `main` |
 | Ticket | QB-34 · Frontend · HU1 |
 | Estado | Planificada; se inicia cuando Gaby apruebe los wireframes y se fusiona después de la PR 1 |
 | Etiquetas | `frontend`, `astro`, `react`, `accesibilidad`, `mobile` |
 
-**Qué cambia:** agrega la página `/crea-tu-caja` con una isla React que guía al comprador por los cinco pasos de la F12. El panel de la caja y el subtotal están siempre visibles, y la caja se agrega al carrito como una sola línea editable. Es la funcionalidad diferencial de la tienda (sección 1.2).
+**Qué cambia:** agrega a la ficha de producto la isla React del personalizador (F3). El comprador elige un modelo base y sus opciones, ve una vista previa y el precio actualizado, y agrega el producto al carrito como una línea editable. Según la entrevista, así compra la mayoría de los clientes de Quinde Blue.
 
 **Cambios principales:**
-- `apps/tienda/src/pages/crea-tu-caja.astro`: carga en el servidor las piezas habilitadas para caja, los tipos y diseños de caja, las tarjetas y las ocasiones.
-- `apps/tienda/src/islands/CreaTuCaja/`: el contenedor, los cinco pasos y `PanelCaja`, que es una columna lateral en escritorio y una barra inferior desplegable en el celular.
-- `apps/tienda/src/stores/caja.ts`: la caja en curso, persistente en el navegador, sin precios.
-- Integración con el store del carrito para agregar y editar cajas (`/crea-tu-caja?editar={lineaId}`).
-- `apps/tienda/tests/islands/CreaTuCaja.test.tsx` y `tests/e2e/crea-tu-caja.spec.ts`: tests de componentes y E2E en móvil y escritorio.
+- `apps/tienda/src/pages/producto/[slug].astro`: carga en el servidor los modelos base y las opciones activas del producto.
+- `apps/tienda/src/islands/Personalizador/`: el contenedor, el selector de modelo, los campos de opción, la vista previa y la barra de compra, fija en el celular.
+- `apps/tienda/src/stores/personalizacion.ts`: la personalización en curso, persistente en el navegador, sin precios.
+- Integración con el store del carrito para agregar y editar líneas (`?editar={lineaId}`).
+- `apps/tienda/tests/islands/Personalizador.test.tsx` y `tests/e2e/personalizador.spec.ts`: tests de componentes y E2E en móvil y escritorio.
 
 **Decisiones para revisar:**
-- La isla se monta con `client:load` y no con `client:idle`, porque es el contenido principal de la página y el comprador interactúa con ella de inmediato.
-- El precio se calcula con `calcularCaja()` del paquete compartido. Se prueba contra `casos-precio.json`, el mismo archivo con el que la PR 1 prueba `crear_pedido()`, para que el subtotal en pantalla y el total cobrado nunca difieran.
-- En el celular se usa una barra inferior fija en lugar de un panel lateral. Sigue el patrón de barra de compra fija del benchmark de fichas, que solo 1 de 10 marcas aplica.
+- La isla se monta con `client:idle` y no con `client:load`, para que la galería, que es lo primero que ve el comprador, cargue sin competir con el JavaScript del personalizador.
+- El precio se calcula con `calcularLinea()` del paquete compartido. Se prueba contra `casos-precio.json`, el mismo archivo con el que la PR 1 prueba `crear_pedido()`, para que el precio en pantalla y el total cobrado nunca difieran.
+- La vista previa es una referencia (imagen del modelo, muestra del color y texto) y se presenta como tal, para no prometer un resultado exacto que el taller luego no pueda igualar.
+- En el celular, el precio y el botón van en una barra inferior fija, siguiendo el patrón que el benchmark de fichas identificó y que solo 1 de 10 marcas aplica.
 
 **Cómo probar:**
 ```bash
-npm run test -w apps/tienda -- CreaTuCaja           # tests de componentes
-npx playwright test tests/e2e/crea-tu-caja.spec.ts  # E2E en móvil y escritorio
-npm run dev -w apps/tienda                           # recorrer /crea-tu-caja en local
+npm run test -w apps/tienda -- Personalizador        # tests de componentes
+npx playwright test tests/e2e/personalizador.spec.ts # E2E en móvil y escritorio
+npm run dev -w apps/tienda                            # recorrer una ficha en local
 ```
-Recorrido manual sugerido: filtrar por "Día del Maestro", llenar la caja mediana hasta el límite, intentar agregar una pieza más, cambiar a la caja grande, personalizar el cuaderno mini, escribir una dedicatoria de 300 caracteres, agregar al carrito, recargar la página y editar la caja desde el carrito.
+Recorrido manual sugerido: abrir el cuaderno A5, elegir el modelo "Floral", color azul y hojas rayadas, escribir un nombre de 20 caracteres, intentar agregar al carrito sin una opción obligatoria, completarla, agregar, recargar la página y editar la línea desde el carrito.
 
-**Evidencias que se adjuntarán:** capturas en 375 px y 1280 px de cada paso, el informe de Lighthouse en móvil (objetivo: rendimiento de 90 o más y accesibilidad de 95 o más) y el tamaño de la isla dentro del presupuesto de 60 KB.
+**Evidencias que se adjuntarán:** capturas en 375 px y 1280 px, el informe de Lighthouse en móvil sobre la ficha (objetivo: rendimiento de 90 o más y accesibilidad de 95 o más) y el tamaño de la isla dentro del presupuesto de 40 KB.
 
-**Riesgos y reversión:** la página es nueva y solo se enlaza desde el inicio cuando Gaby la valida, así que revertir no afecta otras rutas. Riesgo principal: diferencias de redondeo entre el cálculo del frontend y el de la base de datos, cubiertas por los casos compartidos.
+**Riesgos y reversión:** revertir quita la isla, pero la ficha sigue funcionando y muestra el acceso de contacto, así que no se rompe ninguna ruta. Riesgo principal: diferencias de redondeo entre el cálculo del frontend y el de la base de datos, cubiertas por los casos compartidos.
